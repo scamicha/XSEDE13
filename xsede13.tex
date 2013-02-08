@@ -134,8 +134,8 @@ Sen Xu\\
 Bernhard Haubold\\
 %       \affaddr{Scientific Applications and Performance Tuning (SciAPT)},\\
 %       \affaddr{               University Information Technology Services,}\\
-%       \affaddr{              Indiana University, Bloomington, IN, 47408}\\
-%       \email{athota@iu.edu}
+       \affaddr{              Max-Planck Institute for Evolutionary Biology, Pl\"{o}n, Germany}\\
+       \email{haubold@evolbio.mpg.de}
 % 5th. author
 \alignauthor 
 Tom Doak\\
@@ -174,8 +174,142 @@ Abstract ...
 \keywords{mlRho, high-throughput, XSEDE, BigJob, pilot-job, genetics}
 
 \section{Introduction}
-Introduction ...
+Understanding how the amazing biodiversity on our planet has arisen is a biological question that has
+fascinated humans for thousands of years. It is critical to investigate the fundamental ecological and genetic
+parameters (e.g., population sizes, recombination rates) to disentangle the evolutionary process of the
+existing organisms. The ecological and genetic parameters play important roles in creating opportunities for
+increasing genetic diversity, population divergence, and speciation. Deploying mlRho, a software package which
+generates a novel measure of linkage disequilibrium, on XSEDE resources has allowed us to study these
+important population-genetic parameters in a broad assembly of eukaryotic species. This approach has been
+particularly fruitful when applied to the newly available genome sequences now being produced by
+next-generation sequencing methods.
 
+Although there are several methods for determining recombination rates, they can be both time and resource
+intensive. We have employed a novel analytic approach that employs a new metric called the zygosity
+correlation coefficient estimated using maximum likelihood (ML). This approach requires single individual
+samples, but is extremely data intensive. Using the ML approach implemented in the mlRho software developed at
+IU and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of
+species with accuracy that was previously unachievable.
+
+The current incarnation of the mlRho software is a serial code. However, the investigation we have conducted
+with our XSEDE allocation was embarrassingly parallel in nature, so the work for each species was able to be
+divided among many computational processes. To manage hundreds of processes for each of the 40+ species of
+interest, we used the BigJob pilot-job tool, which is currently available on many XSEDE resources. BigJob
+allowed us to distribute the analyses for each species across hundreds to a few thousand processor cores
+depending on the genome sizes of species. Thus far we have conducted ML recombination rate studies on a total
+of {\bf XX} individual genomes. In addition to the use of the BigJob pilot tool we have done extensive performance
+analysis of the mlRho code and, with biologist and computer scientists working in conjunction, have been able
+to improve the runtime of the code by a factor of {\bf XX}. We have also begun work on a parallel
+implementation of the code, and will present a comparison between the parallel implementation and the BigJob
+framework.
+
+The remainder of the paper is organized as follows: in section \ref{sec:background}
+
+
+\section{Background}\label{sec:background}
+
+
+\subsection{Linkage disequilibrium and recombination rate}\label{sec:LD}
+
+Linkage disequilibrium (LD), i.e., the non-random association of alleles at two or more loci, is an important parameter for many areas of population genetics.  In recent years, there has been a growing interest in measuring LD across a broad range of species, because a proper understanding of LD would greatly facilitate identifying the genetic loci which underlie important phenotypic variation in natural populations, as well as human diseases. More importantly, LD is a population-genetic parameter that can help ascertain recombination rate, because recombination is the primary evolutionary force that breaks down LD among genetic loci. Although a substantial body of research has been devoted to determining the evolutionary advantages of recombination~\cite{resolving-paradox}, the forces that determine recombination rates remain poorly understood. For example, we have little idea what determines the occurrence of recombination on a chromosome, what impact local DNA polymorphism has on recombination processes, and how recombination rates change over evolutionary time~\cite{stumpf}. 
+
+Conventional approaches to measuring LD and recombination rates use population-genetic surveys. These surveys require hundreds of individuals and dozens of genetic loci. Using this method, the sampling variance associated with conventional measures of LD, such as D (a measure of LD) and $r^2$ (the square of the correlation coefficient), is huge. Due to this fact, a large number of loci are needed to obtain a reasonable estimate of LD.  Recombination rates can also be investigated by pedigree analyses and crossing experiments, but these methods cannot provide information on fine-scale recombination rates and are often difficult to perform, even in model organisms, let alone non-model species. Thus, while we know these values for a few species, there is very little comparative data to understand how these processes vary across many species.
+
+\subsection{ A novel approach to estimating LD and recombination rate}\label{sec:migration}
+
+Whole genome sequences of diploid organisms include both alleles at every site of the genome (two copies of each chromosome), which can be used to determine a number of very useful population-genetic parameters in the evolution a species. With the rapid accumulation of whole genome sequences from a large number of species, a maximum likelihood (ML) approach that capitalizes on these data has recently been developed in our lab to estimate LD and examine genomic recombination patterns \cite{Lynch01112008,MEC:MEC4482}.
+
+The general idea behind this approach is that two allelic chromosomes had a common ancestor sometime in the past (just as any two humans share a common ancestor at some point in the past), and at that time, were identical. Since that time, they have become increasingly different, due both to mutations changing their sequence, and to each chromosome recombining with other chromosomes in the population (the larger the population, the more other chromosomes there are to recombine with). If we catalog the similarities and differences between the two alleles, we can learn about this history of mutation and recombination. 
+
+The ML approach uses this information to determine the zygosity correlation ($\Delta$) between all the pairs of sites that are separated by various distances (i.e., the probability of two sites being both homozygous or both heterozygous) in a single diploid genome, using the entire set of individual reads. Population genetic theory then links the expected value of delta to conventional measures of LD, such as D and $r^2$, suggesting that $\Delta$ can be used as a valid measure of LD on the population level.
+
+{\center \bf Insert equation 11, 14, and 5d from Lynch unpublished.}
+\begin{eqnarray}
+E(\Delta) \simeq {4E(D^2)\over \pi(1-\pi)}
+\label{eq:edelta}
+\end{eqnarray}
+
+ \begin{eqnarray}
+E(\Delta) = {{\theta(1+\theta)(18+\rho)[A+2-22\theta \rho(3+\rho+12\theta)]} \over {(10+\rho+8\theta)A}}r^2
+\label{eq:edelta}
+\end{eqnarray}
+
+ \begin{eqnarray}
+A = 9+6.5\rho + 0.5\rho^2+19\theta \rho+12\theta^2\rho+\theta \rho^2+54\theta+80\theta^2+32\theta^3
+\label{eq:edelta}
+\end{eqnarray}
+
+
+It has become clear that delta is a function of the population mutation rate ($\theta$= 4 Ne $\mu$) and population recombination rate ($\rho$ = 4Nr), from which theta and rho can be estimated.
+
+{\center \bf Insert equation 6 and equation 5d from Lynch unpublished.}
+
+
+ \begin{eqnarray}
+E(\Delta) \simeq {{\theta(1+2\theta)(18+\rho)} \over {2(1+\theta)A}}
+\label{eq:edelta}
+\end{eqnarray}
+
+ \begin{eqnarray}
+A = 9+6.5\rho + 0.5\rho^2+19\theta \rho+12\theta^2\rho+\theta \rho^2+54\theta+80\theta^2+32\theta^3
+\label{eq:edelta}
+\end{eqnarray}
+
+Thus, when rho is zero, $\Delta$ is approximated by $\theta$; when $\rho$ is infinite, $\Delta$ is approximated by u/r, a parameter that reflects the relative power of mutation versus recombination. These two parameters are critical for evaluating the mutational-hazard hypothesis for genome evolution (Lynch 2007)
+
+Our simulation results have shown that this ML procedure generates unbiased estimates for theta and zygosity-correlation at a range of sequencing coverage (10-20x) \cite{Lynch01112008}. 
+This ML technique has been fully implemented in the software package mlRho. mlRho is a highly versatile program, able to handle genomes of various sizes, and linkage analyses over hundreds of thousands of base pairs. The maximum-likelihood estimates for $\Delta$ and recombination rates are efficiently sought using the Nelder and Mead algorithm, as implemented by the GNU scientific library. Nonetheless, this analysis is computationally extremely intensive: millions to tens of billions of pairs of sites at a given distance have to be extracted from the input files (usually of giga-byte sizes) and maximum likelihood estimates of $\Delta$ have to be calculated for every distance. 
+
+%%%%
+
+With the rapid accumulation of whole genome sequences from a large number of species, a ML approach that capitalizes on these data has recently been developed in our lab to estimate LD and examine genomic recombination patterns~\cite{Lynch01112008,MEC:MEC4482}. Whole genome sequences of diploid organisms include both alleles at every site of the genome, and the ML approach uses this information to determine the zygosity correlation (delta) between all the pairs of sites that are at various distances (i.e., the probability of two sites being both homozygous or both heterozygous) in a single diploid genome, using the entire set of individual reads. Population genetic theory then links the expected value of delta to conventional measures of LD, D and $r^2$ (Lynch, unpublished). 
+%
+%%{\center \bf Insert equation 11, 14, and 5d from Lynch unpublished.}
+%\begin{eqnarray}
+%E(\Delta) \simeq {4E(D^2)\over \pi(1-\pi)}
+%\label{eq:edelta}
+%\end{eqnarray}
+%
+%  \begin{eqnarray}
+%E(\Delta) = {{\theta(1+\theta)(18+\rho)[A+2-22\theta \rho(3+\rho+12\theta)]} \over {(10+\rho+8\theta)A}}r^2
+%\label{eq:edelta}
+%\end{eqnarray}
+%
+%  \begin{eqnarray}
+%A = 9+6.5\rho + 0.5\rho^2+19\theta \rho+12\theta^2\rho+\theta \rho^2+54\theta+80\theta^2+32\theta^3
+%\label{eq:edelta}
+%\end{eqnarray}
+%
+%
+%It has become clear that delta is a function of the population mutation rate (theta=4Nu) and population recombination rate ($\rho=4Nr$). 
+%
+%%{\center \bf Insert equation 6 and equation 5d from Lynch unpublished.}
+%
+%
+%  \begin{eqnarray}
+%E(\Delta) \simeq {{\theta(1+2\theta)(18+\rho)} \over {2(1+\theta)A}}
+%\label{eq:edelta}
+%\end{eqnarray}
+%
+%  \begin{eqnarray}
+%A = 9+6.5\rho + 0.5\rho^2+19\theta \rho+12\theta^2\rho+\theta \rho^2+54\theta+80\theta^2+32\theta^3
+%\label{eq:edelta}
+%\end{eqnarray}
+%
+%\abhi{explain equations?} \\
+%\abhi{get figure 1}
+%
+%
+%Thus, when rho is zero, delta is approximated by theta; when rho is infinite, delta is approximated by u/r, a parameter that reflects the relative power of mutation versus recombination. These two parameters are critical for evaluating the mutational-hazard hypothesis for genome evolution~\cite{lynch-origins}.
+%
+%Previous simulation results have shown that this ML procedure generates unbiased estimates for theta and zygosity-correlation at a sequencing coverage of 18-20x {\bf(Figure 1)}. More importantly, a correction technique that can eliminate the bias for these parameters at low coverage (e.g., 8x coverage, the typical coverage of most available genomes) has been developed in our lab {\bf (Figure 1)}. 
+%
+%{\center \bf Insert figures here.}
+%
+%
+%This ML technique has been fully implemented in the software package mlRho. mlRho is a highly versatile program, able to handle genomes of various sizes, and linkage analyses over hundreds of thousands of base pairs. The maximum-likelihood estimates for theta, delta, and rho are efficiently sought using the Nelder and Mead algorithm, as implemented by the GNU scientific library. Nonetheless, this analysis is computationally extremely intensive: millions to tens of billions of pairs of sites at a given distance have to be extracted from the input files (usually of giga-byte sizes) and maximum likelihood estimates of delta have to be calculated for every distance. 
+%
+%%%%
 
 \section{Conclusions}
 
@@ -187,7 +321,7 @@ Introduction ...
 % initial runs of your .tex file to
 % produce the bibliography for the citations in your paper.
 \bibliographystyle{abbrv}
-\bibliography{sigproc}  % sigproc.bib is the name of the Bibliography in this case
+\bibliography{xsede13}  % sigproc.bib is the name of the Bibliography in this case
 % You must have a proper ".bib" file
 %  and remember to run:
 % latex bibtex latex latex
