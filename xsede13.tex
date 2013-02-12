@@ -94,7 +94,7 @@
 %\crdata{0-12345-67-8/90/01}  % Allows default copyright data (0-89791-88-6/97/05) to be over-ridden - IF NEED BE.
 % --- End of Author Metadata ---
 
-\title{mlRho -- a prototyope for ...}
+\title{mlRho -- The Anatomy of a Successful Campus Bridging Project}
 % \titlenote{(Produces the permission block, and
 %copyright information). For use with
 %SIG-ALTERNATE.CLS. Supported by ACM.}}
@@ -356,9 +356,78 @@ With the rapid accumulation of whole genome sequences from a large number of spe
 %
 %%%%
 
-\section{Deploying mlRho on XSEDE Resources}\label{sec:resources}
+\section{Deploying mlRho on XSEDE \\Resources}\label{sec:resources}
+We have been using Quarry, a local IU resource before we decided to use XSEDE resources. Quarry is a 2960 core machine, where as Ranger is 	a 62,976 core machine, Kraken is a 112,896 core machine and Stampede is a 102400 core machine. \abhi{comment to self, consider adding a table}  The environment on Quarry is similar to that of XSEDE machines referred to here and the way users access it are also similar. The central difference is in the size of the machines and therefore the biggest challenge is scaling our workflow accordingly. 
+
+\subsection{Moving to XSEDE}
+\abhi{notes: startup alloc, scalability tests, etc}
+
+
+
+\subsubsection{Research Plan}\label{sec:plan}
+
+\abhi{change the following paragraph to indicate what we actually did and why. i.e. doing more kbp/genome and may be more genomes}
+We plan to use mlRho to estimate the LD and recombination patterns out to 100 kilo base-pair (kbp) distances for 46 diploid eukaryotic genomes, covering a broad range of genome sizes.%, as shown in table~\ref{table:genome_list}. 
+The 100 kbp cutoff value is chosen because theory suggests that a good measure
+of LD in a genome should span at least 50$-$100 kbp. Given that in eukaryotes, recombination rates range
+between 0.001$-$1 event per Mbp~\cite{annurev-genom-082410-101412}, a 100 kbp window across a genome provides
+a good basis for capturing the signature of crossover events that occur 1 or 2 times per chromosome arm per
+meiotic event.
+
+Our approach to linkage analyses requires diploid genomes that have not been intentionally inbred  (e.g., some plant genomes) or sequenced from several individuals. The list of 46 species are carefully selected from several important taxonomic groups to represent organisms with different ecology, population history, and reproductive strategies  (e.g., asexual vs. sexual). This list  thus constitutes a core dataset to develop a broad survey of linkage disequilibrium, population recombination rate, and population histories across eukaryotes. Furthermore, we have included genomes from multiple individuals for both {\it Daphnia pulex} and humans to explore intraspecific differences in linkage patterns and population histories. 
+
+\subsubsection{Design of Experiments}
+We have carefully constructed a detailed plan on how to proceed with our experiments. In section \ref{sec:tests}, we have shown that we can scale to 128 processes reading from the same file with no performance degradation. We estimate that we can feasibly scale-up to $\approx$500 processes reading from the same data file, without noticeable performance degradation. By making multiple copies of the data file, we could scale-up to $\approx$ 5000 processes. Job requests of 5000 processes on Ranger and Kraken are appropriate and we have not experienced extremely long wait times with past BigJob experiments. If we succeed in implementing this design, we think we can complete our analysis within four to five months from the time of the allocation award. This proposed framework is already working on Ranger, and we are in the process of implementing it on Kraken. 
+
+In our initial testing of the three sample genomes, we worked out a few issues that could have affected
+scalability. One of those issues was data access and file striping. When we had scaled up to 128 cores we
+noticed intermittent I/O issues. Since all the concurrent instances read from a single file, if that file is
+singly striped in a Lustre file system it will introduce a large load on the Lustre servers. We have remedied
+this issue by moving the data files to the scratch file system on Ranger and striping the data files 16
+ways. While this only occurred with the larger (11 and 31 GB) data files, we are aware that this might limit
+our scalability. In the future, if I/O becomes an issue for scalability, we plan to use multiple copies of the
+same data file to prevent an excessive number of concurrent processes from reading from the same file at the same time.
+
+\subsubsection{SAGA BigJob framework}
+\label{sec:bigjob}
+
+BigJob is pilot-job tool available on many XSEDE resources such as Kraken, Ranger and Lonestar. Many researchers have successfully used BigJob~\cite{bigjob_web} to bundle hundreds of smaller jobs into larger, more manageable groups of jobs~\cite{Luckow:2008fp, async_repex11}. 
+
+BigJob allows the user to maintain a list of processors allocated after the job request becomes active. The user can then assign these processors and start and manage jobs. For more details on the BigJob implementation see reference~\cite{saga_bigjob_condor_cloud}. The main benefit of doing this is that instead of submitting thousands of single core job requests to the queue, we can submit hundreds of large job requests ($\approx$ 500 to 5000 cores) to the queue. This reduces the overall job submissions to the queue and thereby, to an extent, time spent waiting in the queue. This job size is also more appropriate for many of the XSEDE machines. 
+
+We plan to use BigJob to bundle our single-core serial mlRho simulations. We have integrated mlRho with BigJob and conducted several experiments on Ranger which have shown good performance and scalability. The experiments are explained in the next section. 
+
+
+\subsubsection{mlRho Scalability Tests using BigJob on Ranger }
+\label{sec:tests}
+
+
+While each mlRho simulation is a serial job, we bundled many mlRho simulations using BigJob on Ranger. 
+We used the BigJob installation already in place on Ranger. The major focus of our tests was to find out how mlRho scales when we increase the number of concurrent mlRho processes. 
+
+We took three different organisms based on the size of their genome. We selected three sizes -- small (0.72 GB), medium (11 GB) and large (31 GB). We ran the mlRho program with each of these genomes. We started with 16 concurrent mlRho instances which are reading from the same data file, and let it run for 24 hours. We repeated this for each of these genomes with 16, 32, 64 and 128 concurrent instances. The results are shown in table~\ref{table:bj_runs} and figure~\ref{fig:scaling}.
+Figure~\ref{fig:scaling} shows that the distance traveled, irrespective of the genome, size and the number of concurrent instances, increases linearly with number of concurrent instances being run. Table~\ref{table:bj_runs} shows the distance traveled by each instance in 24 hours for different genomes. This also shows that the distance traveled is a function of the size of the genome data file. As the reader can observe, distance traveled is directly proportional to the size of the genome data file. We were able to estimate the SUs required per distance per GB of genome data file using each of the three genomes -- all three estimates are nearly identical. Based on these results, we are confident that we can scale up to more than 1000 concurrent instances per genome using BigJob.
+
+
+
 
 \section{Optimization and Performance Tuning of mlRho}\label{sec:optimization}
+\subsection{Performance Analysis}\label{subsec:analysis}
+%\subsection{Source-code Development and Optimization}
+The mlRho application was developed through a collaboration of the Michael Lynch lab (at IU) and the Bernhard
+Haubold lab (at the Max Planck Institute for Evolutionary Biology, Germany). This application is an implementation of
+the novel ML approach. Researchers within the Research Technologies division of IU have been working together
+with the mlRho application developers at IU and the Max Planck Institute for Evolutionary Biology to improve
+the serial performance of the code. Since the ML approach is embarrassingly parallel, and the BigJob tool can
+effectively distribute the workload to thousands of cores, research into parallelism for the code is not a priority right now. As a result of the initial investigations within Research Technologies, a new version has been recently released. 
+
+The preliminary studies of Research Technologies has shown that further investigation into the serial
+performance of the mlRho code is warranted. Particularly in the areas of I/O, memory usage, and call stack
+depth. Research Technologies is planning to do a complete performance analysis of the code using Vampir to
+find and remedy any of these inefficiencies in the code. 
+
+\section{Experiments on XSEDE}{\label{sec:experiments}
+
 
 \section{Findings and Preliminary Science Results}\label{sec:results}
 
