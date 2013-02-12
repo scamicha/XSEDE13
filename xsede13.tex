@@ -46,6 +46,45 @@
 % For tracking purposes - this is V1.9 - April 2009
 
 \documentclass{sig-alternate}
+%\usepackage{longtable}
+%\usepackage{caption}
+\usepackage{graphicx}
+%\usepackage{url}
+%\usepackage{float}
+%\usepackage{times}
+%\usepackage{multirow}
+%\usepackage{listings}
+%\usepackage{times}
+%\usepackage{paralist}
+%\usepackage{epsfig}
+%\usepackage{subfigure}
+%\usepackage{longtable}
+%%\usepackage[hypertex]{hyperref}
+%\usepackage{subfigure}
+\usepackage{color}
+%\usepackage{ifpdf}
+%\usepackage{wrapfig}
+%\usepackage{float}
+%\usepackage{texdraw}
+%\usepackage{epsf}
+%\usepackage{array}
+%\usepackage{cite}
+%\usepackage{enumitem}
+%\usepackage{verbatim}
+%\usepackage{setspace}
+%\sloppy
+%\usepackage{geometry}
+
+
+\newif\ifdraft
+\drafttrue
+\ifdraft
+\newcommand{\abhi}[1]{ {\textcolor{red} { ***Abhinav: #1 }}}
+\else
+\newcommand{\abhi}[1]{ {}}
+\fi
+
+
 
 \begin{document}
 %
@@ -310,6 +349,21 @@ With the rapid accumulation of whole genome sequences from a large number of spe
 %This ML technique has been fully implemented in the software package mlRho. mlRho is a highly versatile program, able to handle genomes of various sizes, and linkage analyses over hundreds of thousands of base pairs. The maximum-likelihood estimates for theta, delta, and rho are efficiently sought using the Nelder and Mead algorithm, as implemented by the GNU scientific library. Nonetheless, this analysis is computationally extremely intensive: millions to tens of billions of pairs of sites at a given distance have to be extracted from the input files (usually of giga-byte sizes) and maximum likelihood estimates of delta have to be calculated for every distance. 
 %
 %%%%
+
+\subsection{Computational Needs}
+
+
+\subsubsection{XSEDE Startup and XRAC Allocations}
+
+
+\section{Performance Analysis and Optimization}
+everyone should do a performance analysis of their code. this is usually done for most community codes. this is especially important when using shared resources, such as XSEDE. 
+\subsection{Analysis using Vampir}
+
+
+\section{Experiments}
+
+
 
 \section{Conclusions}
 
