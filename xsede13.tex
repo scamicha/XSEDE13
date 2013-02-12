@@ -242,19 +242,25 @@ to improve the runtime of the code by a factor of {\bf XX}. We have also begun w
 implementation of the code, and will present a comparison between the parallel implementation and the BigJob
 framework.
 
-The remainder of the paper is organized as follows: in section \ref{sec:background}
+The remainder of the paper is organized as follows: section \ref{sec:background} gives some insight into the
+computational methodologies and principles of biology being explored by the mlRho code. Section
+\ref{sec:resources} outlines our initial estimates for the computational resources necessary to accomplish our
+research agenda and the steps that were taken to secure an XSEDE allocation. In section \ref{sec:optimization}
+we describe how through tracing and profiling of the code we were able to successfully optimize it and
+dramatically increase its performance. Section \ref{sec:results} details the current status of the research
+program and some initial science results and in section \ref{sec:conclusion} we present some conclusions.
 
 
 \section{Background}\label{sec:background}
 
 
-\subsection{Linkage disequilibrium and recombination rate}\label{sec:LD}
+\subsection{Linkage Disequilibrium and Recombination Rate}\label{sec:LD}
 
 Linkage disequilibrium (LD), i.e., the non-random association of alleles at two or more loci, is an important parameter for many areas of population genetics.  In recent years, there has been a growing interest in measuring LD across a broad range of species, because a proper understanding of LD would greatly facilitate identifying the genetic loci which underlie important phenotypic variation in natural populations, as well as human diseases. More importantly, LD is a population-genetic parameter that can help ascertain recombination rate, because recombination is the primary evolutionary force that breaks down LD among genetic loci. Although a substantial body of research has been devoted to determining the evolutionary advantages of recombination~\cite{resolving-paradox}, the forces that determine recombination rates remain poorly understood. For example, we have little idea what determines the occurrence of recombination on a chromosome, what impact local DNA polymorphism has on recombination processes, and how recombination rates change over evolutionary time~\cite{stumpf}. 
 
 Conventional approaches to measuring LD and recombination rates use population-genetic surveys. These surveys require hundreds of individuals and dozens of genetic loci. Using this method, the sampling variance associated with conventional measures of LD, such as D (a measure of LD) and $r^2$ (the square of the correlation coefficient), is huge. Due to this fact, a large number of loci are needed to obtain a reasonable estimate of LD.  Recombination rates can also be investigated by pedigree analyses and crossing experiments, but these methods cannot provide information on fine-scale recombination rates and are often difficult to perform, even in model organisms, let alone non-model species. Thus, while we know these values for a few species, there is very little comparative data to understand how these processes vary across many species.
 
-\subsection{ A novel approach to estimating LD and recombination rate}\label{sec:migration}
+\subsection{ A Novel Approach to Estimating LD and Recombination Rate}\label{sec:migration}
 
 Whole genome sequences of diploid organisms include both alleles at every site of the genome (two copies of each chromosome), which can be used to determine a number of very useful population-genetic parameters in the evolution a species. With the rapid accumulation of whole genome sequences from a large number of species, a maximum likelihood (ML) approach that capitalizes on these data has recently been developed in our lab to estimate LD and examine genomic recombination patterns \cite{Lynch01112008,MEC:MEC4482}.
 
@@ -350,22 +356,14 @@ With the rapid accumulation of whole genome sequences from a large number of spe
 %
 %%%%
 
-\subsection{Computational Needs}
+\section{Deploying mlRho on XSEDE Resources}\label{sec:resources}
 
+\section{Optimization and Performance Tuning of mlRho}\label{sec:optimization}
 
-\subsubsection{XSEDE Startup and XRAC Allocations}
+\section{Findings and Preliminary Science Results}\label{sec:results}
 
+\section{Conclusions}\label{sec:conclusion}
 
-\section{Performance Analysis and Optimization}
-everyone should do a performance analysis of their code. this is usually done for most community codes. this is especially important when using shared resources, such as XSEDE. 
-\subsection{Analysis using Vampir}
-
-
-\section{Experiments}
-
-
-
-\section{Conclusions}
 
 
 %ACKNOWLEDGMENTS are optional
