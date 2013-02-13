@@ -230,6 +230,8 @@ samples, but is extremely data intensive. Using the ML approach implemented in t
 IU and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of
 species with accuracy that was previously unachievable.
 
+The biggest challenge to efficiently using XSEDE resources is being able to scale-up our workflows so that they work well on the larger XSEDE machines. The operating environment is not very different on XSEDE when compared to IU resources. In our situation, campus-bridging amounted to helping the researchers re-design their experiments and scale-up their workflows to use the bigger machines effectively. In this paper we discuss how we bridged the gap between the different approaches that are needed to succeed on machines of different sizes. 
+
 The current incarnation of the mlRho software is a serial code. However, the investigation we have conducted
 with our XSEDE allocation was embarrassingly parallel in nature, so the work for each species was able to be
 divided among many computational processes. To manage hundreds of processes for each of the 40+ species of
@@ -357,11 +359,13 @@ With the rapid accumulation of whole genome sequences from a large number of spe
 %%%%
 
 \section{Deploying mlRho on XSEDE \\Resources}\label{sec:resources}
-We have been using Quarry, a local IU resource before we decided to use XSEDE resources. Quarry is a 2960 core machine, where as Ranger is 	a 62,976 core machine, Kraken is a 112,896 core machine and Stampede is a 102400 core machine. \abhi{comment to self, consider adding a table}  The environment on Quarry is similar to that of XSEDE machines referred to here and the way users access it are also similar. The central difference is in the size of the machines and therefore the biggest challenge is scaling our workflow accordingly. 
+We have been using Quarry, a local IU resource before we decided to use XSEDE resources. Quarry is a 2960 core machine, where as Ranger is 	a 62,976 core machine, Kraken is a 112,896 core machine and Stampede is a 102400 core machine. \abhi{comment to self, consider adding a table}  The environment on Quarry is similar to that of XSEDE machines referred to here and the way users access it are also similar. The central difference is the size of the machines and therefore the biggest challenge is scaling our workflow accordingly. We explain how we made the transition and discuss the tools that we used to succeed on XSEDE.
 
-\subsection{Moving to XSEDE}
+\subsection{Transition to XSEDE}
 \abhi{notes: startup alloc, scalability tests, etc}
+We were faced with multiple questions at the start. Which of the large XSEDE machines suits us the best? Should we use more than one machine? How many SUs do we need to complete our research? Should we do everything we can or compress the amount of work we want to do depending on the number of SUs we can get from XSEDE?
 
+We started by requesting startup allocations on Ranger and Kraken.  \abhi{cite something?} While it is possible to get good throughput submitting serial jobs to the scheduler on Quarry, this is not an optimal approach on machines like Ranger and Kraken. The scheduling policies on large machines usually favor large jobs. Many supercomputing centers have policies that limit the number of jobs a user can have in the queue. 
 
 
 \subsubsection{Research Plan}\label{sec:plan}
