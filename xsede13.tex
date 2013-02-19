@@ -84,7 +84,7 @@
 \else
 \newcommand{\abhi}[1]{ {}}
 \fi
-
+\newcommand{\ty}{\texttt}
 
 
 \begin{document}
@@ -214,7 +214,6 @@ Abstract ...
 \keywords{mlRho, high-throughput, XSEDE, BigJob, pilot-job, genetics}
 
 \section{Introduction}
-
 As first defined by the National Science Foundation Advisory Committee for Cyberinfrastructure's task force on
 campus bridging \cite{nsf2011}, and later expanded upon by \citeauthor{stewart2012}, campus bridging is:
 
@@ -256,7 +255,6 @@ program and some initial science results and in section \ref{sec:conclusion} we 
 
 
 \section{Background}\label{sec:background}
-
 Understanding how the amazing biodiversity on our planet has arisen is a biological question that has
 fascinated humans for thousands of years. It is critical to investigate the fundamental ecological and genetic
 parameters (e.g., population sizes, recombination rates) to disentangle the evolutionary process of the
@@ -274,8 +272,23 @@ samples, but is extremely data intensive. Using the ML approach implemented in t
 IU and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of
 species with accuracy that was previously unachievable.
 
-\subsection{Linkage Disequilibrium and Recombination Rate}\label{sec:LD}
+\subsection{Program Description}
+\texttt{mlRho} estimates mutation, recombination, and sequencing error from genome
+sequences~\cite{hau10:mlr}. The underlying data consists of assembled sequencing reads obtained from a single
+diploid individual. Such data are collected, for example, for the 1000 human genome project. At each sequenced
+position \texttt{mlRho} reads the number of \ty{A}s, \ty{C}s, \ty{G}s, and \ty{T}s, a ``profile'', from a
+file. Given a mutation and error rate, \ty{mlRho} computes two probabilities for each profile: The
+probabilities of observing the profile given that the position is either mutated (heterozygous), or not
+(homozygous). These probabilities depend on the mutation and error rates. By varying them, \ty{mlRho} finds
+the values that maximize the overall likelihood of the data.
 
+While mutation and sequencing error affect individual genome positions, recombination uncouples the
+evolutionary history of pairs of positions. This is observable as a decorrelation of the zygosity states of
+pairs of positions. To estimate recombination, \ty{mlRho} computes the probability of observing profile pairs
+separated by, say, 1000 nucleotides. This is a function of the recombination rate and the single position
+likelihoods.
+
+\subsection{Linkage Disequilibrium and Recombination Rate}\label{sec:LD}
 Linkage disequilibrium (LD), i.e., the non-random association of alleles at two or more loci, is an important parameter for many areas of population genetics.  In recent years, there has been a growing interest in measuring LD across a broad range of species, because a proper understanding of LD would greatly facilitate identifying the genetic loci which underlie important phenotypic variation in natural populations, as well as human diseases. More importantly, LD is a population-genetic parameter that can help ascertain recombination rate, because recombination is the primary evolutionary force that breaks down LD among genetic loci. Although a substantial body of research has been devoted to determining the evolutionary advantages of recombination~\cite{resolving-paradox}, the forces that determine recombination rates remain poorly understood. For example, we have little idea what determines the occurrence of recombination on a chromosome, what impact local DNA polymorphism has on recombination processes, and how recombination rates change over evolutionary time~\cite{stumpf}. 
 
 Conventional approaches to measuring LD and recombination rates use population-genetic surveys. These surveys require hundreds of individuals and dozens of genetic loci. Using this method, the sampling variance associated with conventional measures of LD, such as D (a measure of LD) and $r^2$ (the square of the correlation coefficient), is huge. Due to this fact, a large number of loci are needed to obtain a reasonable estimate of LD.  Recombination rates can also be investigated by pedigree analyses and crossing experiments, but these methods cannot provide information on fine-scale recombination rates and are often difficult to perform, even in model organisms, let alone non-model species. Thus, while we know these values for a few species, there is very little comparative data to understand how these processes vary across many species.
@@ -448,8 +461,59 @@ performance of the mlRho code is warranted. Particularly in the areas of I/O, me
 depth. Research Technologies is planning to do a complete performance analysis of the code using Vampir to
 find and remedy any of these inefficiencies in the code. 
 
-\section{Experiments on XSEDE}{\label{sec:experiments}
+\subsection{Speeding up \ty{mlRho}}
+Starting with version 1.10, we looked at two aspects of \ty{mlRho} to
+increase its efficiency: data handling and repeated
+computation. As to data handling, many profiles occur repeatedly in a
+data set and BH wrote the program \ty{formatPro} for compressing the raw
+profiles. \ty{formatPro} writes a table of unique profiles and a table
+of genome positions with a foreign key referring to the profile
+table. The profiles are read either from a text file, or from a BAM
+file. BAM is the standard format for distributing genome alignment
+files over the net~\cite{li09:seq}. \ty{mlRho} comes with documentation and example
+scripts for accessing such data.
 
+Indexing profiles for efficient data handling entailed removing repeated
+computation of profile likelihoods. In addition, the single profile
+likelihoods are now written to disk and reused in the recombination
+analysis. The combination of better data handling and careful
+avoidance of repeated computations lead to a 60-fold speedup of
+\ty{mlRho} while retaining its minimal memory requirement.
+
+\section{Validation}
+To determine the accuracy of the revamped \ty{mlRho}, we simulated
+sequencing data with known mutation and recombination
+rates. Figure~\ref{fig:test}A shows that the mutation rate is
+accurately estimated even if exceeded by the error
+rate. Similarly, Figure~\ref{fig:test}B shows that the recombination rate is
+slightly underestimated if the mutation rate $\theta=10^{-2}$ and
+$\rho=10^{-2}$ or $\rho=10^{-3}$.
+
+\begin{figure}
+  \begin{center}
+    \resizebox{\textwidth}{!}{
+     \begin{tabular}{cc}
+        \textbf{A} & \textbf{B}\\
+        \input{figures/theta} & \input{figures/rho}
+      \end{tabular}
+    }
+  \end{center}
+\caption{Testing the accuracy of \ty{mlRho}. \textbf{A}: The mutation
+  rate estimator, $\hat\theta$, as a function of the sequencing error
+  rate, $\epsilon$; sequence length: $10^8$. \textbf{B}: The
+  recombination rate estimator, $\hat\rho$, as a function of pairwise
+  distance; the data set consists of 1000 pairs of 100kb sequences
+  with $\theta=0.01$ and $\epsilon=10^{-4}$; horizontal lines:
+  expected value. Coverage: 10.}\label{fig:test}
+\end{figure}
+
+
+\section{Experiments on XSEDE}{\label{sec:experiments}
+Migrating from the local cluster Quarry and Mason to Ranger on Xsede is smooth because of the similar computational environment on these clusters. All the data files were easily transferred by standard means. The necessary modules and libraries are all available on Ranger and Stampede.
+ 
+My experience with running mlRho analysis using Bigjob on Ranger consisted of two different phases in terms of the program performance. When we were developing this idea to use Bigjob to run the analysis in an embrassingly parallel way (prior to July 2012), the performance of Bigjob was excellent. All the multicore jobs were completed nicely. However, after the approval of our allocation in September 2012, Bigjob had been upgraded. There seems a number of issues with Bigjob. First of all, the way Bigjob is run involves using the command nohup. As all the jobs are submitted on the login node of Ranger, it is required that no more than 4 nohup commands can be run at one time. It occurred a couple times that I submitted more than 4 bigjobs on the login node and my jobs were all suspended. Subsequently, I was banned from running the jobs. Unfortunately, I was not notified until I found all my jobs were not running for two to three days. This seems to me rather counter productive. For my project, I need to submit ~100 multicore jobs (requiring on average 1024-4096 cores) in total. I would like to have the capacity to submit a number of jobs in the queue and collect data when the jobs are done. Assuming each job is done right, submitting four jobs at a time is not problematic. What is truly problematic is that I encountered a situation that many cores (up to 60\% of the cores) in the same job cannot finish the analysis properly, resulting many missing values. Finding out the missing values and creating new jobs will not necessarily solve the problem, because I often had cores not working properly in these new jobs.
+ 
+We have tried many ways to solve this issue. We thought this might be an issue of our program. Then we implemented the revised code. We used different settings for the Bigjob script. However, none of those helped improve the situation.
 
 \section{Findings and Preliminary Science Results}\label{sec:results}
 
