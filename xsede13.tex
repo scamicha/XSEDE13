@@ -227,11 +227,27 @@ the VO. \cite{stewart2012}''
 
 In applying this definition of campus bridging to XSEDE, one of the biggest challenges for researchers moving
 from campus resources to XSEDE resources is being able to scale-up their workflows so that they are efficient
-and can achieve high throughput on the larger XSEDE machines. The operating environment is not very different
-on XSEDE when compared to IU resources. In our situation, campus-bridging amounted to helping the researchers
-re-design their experiments and scale-up their workflows to use the bigger machines effectively. In this paper
-we discuss how we bridged the gap between the different approaches that are needed to succeed on machines of
-different sizes.
+and can achieve high throughput on the larger XSEDE machines. While \citeauthor{stewart2012} identify key use
+cases where campus bridging tools can improve a researcher's experience using XSEDE resources, one aspect that
+is not included in their analysis is the dramatic increase in complexity that is inherent in the computational
+and data storage systems when a researcher moves from his workstation to an XSEDE resource. This scale up in
+complexity is in many cases a daunting prospect for a researcher new to XSEDE who may have relatively little
+computational experience. Even savvy users who have experience with campus clusters can encounter issues when
+scaling up to XSEDE resources.
+
+This challenge is distinct from the challenge of providing a canonical software stack (proposed via a ROCKS
+Roll by \citeauthor{stewart2012}), but can be compounded by widely divergent software environments between
+campus and XSEDE resources. Even when the operating environment is not very different on XSEDE resources when
+compared to campus resources researchers face problems with the sheer scale and complexity of XSEDE
+resources. In our situation, campus bridging amounted to helping the researchers redesign their experiments
+and scale up their workflows to move from their local workstations to IU's modest sized cluster environment,
+and then on to use the much larger XSEDE machines at TACC effectively. It should be noted that, in general,
+the differences in software environment between the IU campus resources and the TACC supercomputers were
+superficial, the real challenge lie in dealing with scaling up the application and navigating the complexity
+of a much larger system. 
+
+In this paper we introduce a potential   In this paper we discuss how we bridged
+the gap between the different approaches that are needed to succeed on machines of different sizes.
 
 The current incarnation of the mlRho software is a serial code. However, the investigation we have conducted
 with our XSEDE allocation was embarrassingly parallel in nature, so the work for each species was able to be
@@ -489,23 +505,23 @@ rate. Similarly, Figure~\ref{fig:test}B shows that the recombination rate is
 slightly underestimated if the mutation rate $\theta=10^{-2}$ and
 $\rho=10^{-2}$ or $\rho=10^{-3}$.
 
-\begin{figure}
-  \begin{center}
-    \resizebox{\textwidth}{!}{
-     \begin{tabular}{cc}
-        \textbf{A} & \textbf{B}\\
-        \input{figures/theta} & \input{figures/rho}
-      \end{tabular}
-    }
-  \end{center}
-\caption{Testing the accuracy of \ty{mlRho}. \textbf{A}: The mutation
-  rate estimator, $\hat\theta$, as a function of the sequencing error
-  rate, $\epsilon$; sequence length: $10^8$. \textbf{B}: The
-  recombination rate estimator, $\hat\rho$, as a function of pairwise
-  distance; the data set consists of 1000 pairs of 100kb sequences
-  with $\theta=0.01$ and $\epsilon=10^{-4}$; horizontal lines:
-  expected value. Coverage: 10.}\label{fig:test}
-\end{figure}
+% \begin{figure}
+%   \begin{center}
+%     \resizebox{\textwidth}{!}{
+%      \begin{tabular}{cc}
+%         \textbf{A} & \textbf{B}\\
+%         \input{figures/theta} & \input{figures/rho}
+%       \end{tabular}
+%     }
+%   \end{center}
+% \caption{Testing the accuracy of \ty{mlRho}. \textbf{A}: The mutation
+%   rate estimator, $\hat\theta$, as a function of the sequencing error
+%   rate, $\epsilon$; sequence length: $10^8$. \textbf{B}: The
+%   recombination rate estimator, $\hat\rho$, as a function of pairwise
+%   distance; the data set consists of 1000 pairs of 100kb sequences
+%   with $\theta=0.01$ and $\epsilon=10^{-4}$; horizontal lines:
+%   expected value. Coverage: 10.}\label{fig:test}
+% \end{figure}
 
 
 \section{Experiments on XSEDE}{\label{sec:experiments}
