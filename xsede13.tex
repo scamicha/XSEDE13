@@ -506,6 +506,10 @@ My experience with running mlRho analysis using Bigjob on Ranger consisted of tw
  
 We have tried many ways to solve this issue. We thought this might be an issue of our program. Then we implemented the revised code. We used different settings for the Bigjob script. However, none of those helped improve the situation.
 
+The job size was determined based on the scaling test done when preparing our allocation request. Assuming each core can finish simulation for a certain distance with respect to a particular genome size, the number of cores is determined by the total distance for simulation and single job distance.
+ 
+The queuing time on Ranger was largely determined by how many jobs each user have used in the recent past. For a heavy user in the last one or two days, the queuing time might be 1-2 days for new jobs. The Stampede is excellent in terms of queuing time. At this moment, any job gets started almost immediately.
+
 \section{Findings and Preliminary Science Results}\label{sec:results}
 
 \section{Conclusions}\label{sec:conclusion}
