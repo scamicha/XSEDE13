@@ -62,6 +62,7 @@
 %%\usepackage[hypertex]{hyperref}
 %\usepackage{subfigure}
 \usepackage{color}
+\usepackage[numbers]{natbib}
 %\usepackage{ifpdf}
 %\usepackage{wrapfig}
 %\usepackage{float}
@@ -213,24 +214,40 @@ Abstract ...
 \keywords{mlRho, high-throughput, XSEDE, BigJob, pilot-job, genetics}
 
 \section{Introduction}
-Understanding how the amazing biodiversity on our planet has arisen is a biological question that has
-fascinated humans for thousands of years. It is critical to investigate the fundamental ecological and genetic
-parameters (e.g., population sizes, recombination rates) to disentangle the evolutionary process of the
-existing organisms. The ecological and genetic parameters play important roles in creating opportunities for
-increasing genetic diversity, population divergence, and speciation. Deploying mlRho, a software package which
-generates a novel measure of linkage disequilibrium, on XSEDE resources has allowed us to study these
-important population-genetic parameters in a broad assembly of eukaryotic species. This approach has been
-particularly fruitful when applied to the newly available genome sequences now being produced by
-next-generation sequencing methods.
+As first defined by the National Science Foundation Advisory Committee for Cyberinfrastructure's task force on
+campus bridging \cite{nsf2011}, and later expanded upon by \citeauthor{stewart2012}, campus bridging is:
 
-Although there are several methods for determining recombination rates, they can be both time and resource
-intensive. We have employed a novel analytic approach that employs a new metric called the zygosity
-correlation coefficient estimated using maximum likelihood (ML). This approach requires single individual
-samples, but is extremely data intensive. Using the ML approach implemented in the mlRho software developed at
-IU and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of
-species with accuracy that was previously unachievable.
+\begin{quotation}
+``...the seamlessly integrated use of cyberinfrastructure operated by a scientist or engineer
+with other cyberinfrastructure on the scientist's campus, at other campuses, and at the regional, national,
+and international levels as if they were proximate to the scientist, and when working within the context of a
+Virtual Organization (VO) make the 'virtual' aspect of the organization irrelevant (or helpful) to the work of
+the VO. \cite{stewart2012}''
+\end{quotation}
 
-The biggest challenge to efficiently using XSEDE resources is being able to scale-up our workflows so that they work well on the larger XSEDE machines. The operating environment is not very different on XSEDE when compared to IU resources. In our situation, campus-bridging amounted to helping the researchers re-design their experiments and scale-up their workflows to use the bigger machines effectively. In this paper we discuss how we bridged the gap between the different approaches that are needed to succeed on machines of different sizes. 
+In applying this definition of campus bridging to XSEDE, one of the biggest challenges for researchers moving
+from campus resources to XSEDE resources is being able to scale-up their workflows so that they are efficient
+and can achieve high throughput on the larger XSEDE machines. While \citeauthor{stewart2012} identify key use
+cases where campus bridging tools can improve a researcher's experience using XSEDE resources, one aspect that
+is not included in their analysis is the dramatic increase in complexity that is inherent in the computational
+and data storage systems when a researcher moves from his workstation to an XSEDE resource. This scale up in
+complexity is in many cases a daunting prospect for a researcher new to XSEDE who may have relatively little
+computational experience. Even savvy users who have experience with campus clusters can encounter issues when
+scaling up to XSEDE resources.
+
+This challenge is distinct from the challenge of providing a canonical software stack (proposed via a ROCKS
+Roll by \citeauthor{stewart2012}), but can be compounded by widely divergent software environments between
+campus and XSEDE resources. Even when the operating environment is not very different on XSEDE resources when
+compared to campus resources researchers face problems with the sheer scale and complexity of XSEDE
+resources. In our situation, campus bridging amounted to helping the researchers redesign their experiments
+and scale up their workflows to move from their local workstations to IU's modest sized cluster environment,
+and then on to use the much larger XSEDE machines at TACC effectively. It should be noted that, in general,
+the differences in software environment between the IU campus resources and the TACC supercomputers were
+superficial, the real challenge lie in dealing with scaling up the application and navigating the complexity
+of a much larger system. 
+
+In this paper we introduce a potential   In this paper we discuss how we bridged
+the gap between the different approaches that are needed to succeed on machines of different sizes.
 
 The current incarnation of the mlRho software is a serial code. However, the investigation we have conducted
 with our XSEDE allocation was embarrassingly parallel in nature, so the work for each species was able to be
@@ -254,32 +271,40 @@ program and some initial science results and in section \ref{sec:conclusion} we 
 
 
 \section{Background}\label{sec:background}
+Understanding how the amazing biodiversity on our planet has arisen is a biological question that has
+fascinated humans for thousands of years. It is critical to investigate the fundamental ecological and genetic
+parameters (e.g., population sizes, recombination rates) to disentangle the evolutionary process of the
+existing organisms. The ecological and genetic parameters play important roles in creating opportunities for
+increasing genetic diversity, population divergence, and speciation. Deploying mlRho, a software package which
+generates a novel measure of linkage disequilibrium, on XSEDE resources has allowed us to study these
+important population-genetic parameters in a broad assembly of eukaryotic species. This approach has been
+particularly fruitful when applied to the newly available genome sequences now being produced by
+next-generation sequencing methods.
+
+Although there are several methods for determining recombination rates, they can be both time and resource
+intensive. We have employed a novel analytic approach that employs a new metric called the zygosity
+correlation coefficient estimated using maximum likelihood (ML). This approach requires single individual
+samples, but is extremely data intensive. Using the ML approach implemented in the mlRho software developed at
+IU and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of
+species with accuracy that was previously unachievable.
 
 \subsection{Program Description}
-\texttt{mlRho} estimates mutation, recombination, and sequencing error
-from genome sequences~\cite{hau10:mlr}. The underlying data consists of
-assembled sequencing reads obtained from a single diploid
-individual. Such data are collected, for example, for the 1000 human
-genome project. At each sequenced position \texttt{mlRho} reads the number
-of \ty{A}s, \ty{C}s, \ty{G}s, and \ty{T}s, a ``profile'', from a
-file. Given a mutation and error rate, \ty{mlRho} computes two
-probabilities for each profile: The probabilities of observing the
-profile given that the position is either mutated (heterozygous), or
-not (homozygous). These probabilities depend on the mutation
-and error rates. By varying them, \ty{mlRho} finds the values that
-maximize the overall likelihood of the data.
+\texttt{mlRho} estimates mutation, recombination, and sequencing error from genome
+sequences~\cite{hau10:mlr}. The underlying data consists of assembled sequencing reads obtained from a single
+diploid individual. Such data are collected, for example, for the 1000 human genome project. At each sequenced
+position \texttt{mlRho} reads the number of \ty{A}s, \ty{C}s, \ty{G}s, and \ty{T}s, a ``profile'', from a
+file. Given a mutation and error rate, \ty{mlRho} computes two probabilities for each profile: The
+probabilities of observing the profile given that the position is either mutated (heterozygous), or not
+(homozygous). These probabilities depend on the mutation and error rates. By varying them, \ty{mlRho} finds
+the values that maximize the overall likelihood of the data.
 
-While mutation and sequencing error affect individual genome
-positions, recombination uncouples the evolutionary history of pairs
-of positions. This is observable as a decorrelation of the zygosity
-states of pairs of positions. To estimate recombination, \ty{mlRho}
-computes the probability of observing profile pairs separated by, say,
-1000 nucleotides. This is a function of the recombination rate and the
-single position likelihoods.
-
+While mutation and sequencing error affect individual genome positions, recombination uncouples the
+evolutionary history of pairs of positions. This is observable as a decorrelation of the zygosity states of
+pairs of positions. To estimate recombination, \ty{mlRho} computes the probability of observing profile pairs
+separated by, say, 1000 nucleotides. This is a function of the recombination rate and the single position
+likelihoods.
 
 \subsection{Linkage Disequilibrium and Recombination Rate}\label{sec:LD}
-
 Linkage disequilibrium (LD), i.e., the non-random association of alleles at two or more loci, is an important parameter for many areas of population genetics.  In recent years, there has been a growing interest in measuring LD across a broad range of species, because a proper understanding of LD would greatly facilitate identifying the genetic loci which underlie important phenotypic variation in natural populations, as well as human diseases. More importantly, LD is a population-genetic parameter that can help ascertain recombination rate, because recombination is the primary evolutionary force that breaks down LD among genetic loci. Although a substantial body of research has been devoted to determining the evolutionary advantages of recombination~\cite{resolving-paradox}, the forces that determine recombination rates remain poorly understood. For example, we have little idea what determines the occurrence of recombination on a chromosome, what impact local DNA polymorphism has on recombination processes, and how recombination rates change over evolutionary time~\cite{stumpf}. 
 
 Conventional approaches to measuring LD and recombination rates use population-genetic surveys. These surveys require hundreds of individuals and dozens of genetic loci. Using this method, the sampling variance associated with conventional measures of LD, such as D (a measure of LD) and $r^2$ (the square of the correlation coefficient), is huge. Due to this fact, a large number of loci are needed to obtain a reasonable estimate of LD.  Recombination rates can also be investigated by pedigree analyses and crossing experiments, but these methods cannot provide information on fine-scale recombination rates and are often difficult to perform, even in model organisms, let alone non-model species. Thus, while we know these values for a few species, there is very little comparative data to understand how these processes vary across many species.
@@ -480,23 +505,23 @@ rate. Similarly, Figure~\ref{fig:test}B shows that the recombination rate is
 slightly underestimated if the mutation rate $\theta=10^{-2}$ and
 $\rho=10^{-2}$ or $\rho=10^{-3}$.
 
-\begin{figure}
-  \begin{center}
-    \resizebox{\textwidth}{!}{
-     \begin{tabular}{cc}
-        \textbf{A} & \textbf{B}\\
-        \input{figures/theta} & \input{figures/rho}
-      \end{tabular}
-    }
-  \end{center}
-\caption{Testing the accuracy of \ty{mlRho}. \textbf{A}: The mutation
-  rate estimator, $\hat\theta$, as a function of the sequencing error
-  rate, $\epsilon$; sequence length: $10^8$. \textbf{B}: The
-  recombination rate estimator, $\hat\rho$, as a function of pairwise
-  distance; the data set consists of 1000 pairs of 100kb sequences
-  with $\theta=0.01$ and $\epsilon=10^{-4}$; horizontal lines:
-  expected value. Coverage: 10.}\label{fig:test}
-\end{figure}
+% \begin{figure}
+%   \begin{center}
+%     \resizebox{\textwidth}{!}{
+%      \begin{tabular}{cc}
+%         \textbf{A} & \textbf{B}\\
+%         \input{figures/theta} & \input{figures/rho}
+%       \end{tabular}
+%     }
+%   \end{center}
+% \caption{Testing the accuracy of \ty{mlRho}. \textbf{A}: The mutation
+%   rate estimator, $\hat\theta$, as a function of the sequencing error
+%   rate, $\epsilon$; sequence length: $10^8$. \textbf{B}: The
+%   recombination rate estimator, $\hat\rho$, as a function of pairwise
+%   distance; the data set consists of 1000 pairs of 100kb sequences
+%   with $\theta=0.01$ and $\epsilon=10^{-4}$; horizontal lines:
+%   expected value. Coverage: 10.}\label{fig:test}
+% \end{figure}
 
 
 \section{Experiments on XSEDE}{\label{sec:experiments}
@@ -522,7 +547,7 @@ The queuing time on Ranger was largely determined by how many jobs each user hav
 % The following two commands are all you need in the
 % initial runs of your .tex file to
 % produce the bibliography for the citations in your paper.
-\bibliographystyle{abbrv}
+\bibliographystyle{abbrvnat}
 \bibliography{xsede13}  % sigproc.bib is the name of the Bibliography in this case
 % You must have a proper ".bib" file
 %  and remember to run:
