@@ -489,6 +489,24 @@ file. BAM is the standard format for distributing genome alignment
 files over the net~\cite{li09:seq}. \ty{mlRho} comes with documentation and example
 scripts for accessing such data.
 
+\begin{table}
+\centering
+\begin{tabular}{| l  | l  | l  | l  | l  | l  | l  |} \hline
+	&Ranger & \multicolumn{3}{|c|}{Mason}\\ \hline
+	& 1.11  & 1.10&1.11 & 1.14\\ \hline
+GNU & 450 & 508 & 414 & 394   \\
+\hline
+Intel & 405 & 388 & 364 & 346\\
+\hline
+PGI &418 & N/A   & N/A &N/A\\
+\hline
+
+\end{tabular}
+\caption{\abhi{placeholder}The table shoes mlRho runtimes on different machines with different compilers. The runtimes are in seconds. Compiling with the Intel compiler gave us a 10\% speedup compared to GNU/PGI compilers on Mason and Ranger. Future work could include building GSL with Intel compilers.   } 
+\label{table:cache_comp}
+\end{table}
+
+
 Indexing profiles for efficient data handling entailed removing repeated
 computation of profile likelihoods. In addition, the single profile
 likelihoods are now written to disk and reused in the recombination
@@ -534,6 +552,10 @@ We have tried many ways to solve this issue. We thought this might be an issue o
 The job size was determined based on the scaling test done when preparing our allocation request. Assuming each core can finish simulation for a certain distance with respect to a particular genome size, the number of cores is determined by the total distance for simulation and single job distance.
  
 The queuing time on Ranger was largely determined by how many jobs each user have used in the recent past. For a heavy user in the last one or two days, the queuing time might be 1-2 days for new jobs. The Stampede is excellent in terms of queuing time. At this moment, any job gets started almost immediately.
+
+%note from Sen
+The speeding up of mlRho program greatly enabled the expansion of this project. Instead of performing analysis to 100 kilo basepairs, we now can carry analyses up to 1 million basepairs.
+In fact, the originally proposed work load has been completed. We basically did 10 times more than what we planed to do.
 
 \section{Findings and Preliminary Science Results}\label{sec:results}
 
