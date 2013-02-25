@@ -238,29 +238,46 @@ scaling up to XSEDE resources.
 
 This challenge is distinct from the challenge of providing a canonical software stack (proposed via a ROCKS
 Roll by \citeauthor{stewart2012}), but can be compounded by widely divergent software environments between
-campus and XSEDE resources. Even when the operating environment is not very different on XSEDE resources when
-compared to campus resources researchers face problems with the sheer scale and complexity of XSEDE
-resources. In our situation, campus bridging amounted to helping the researchers redesign their experiments
-and scale up their workflows to move from their local workstations to IU's modest sized cluster environment,
-and then on to use the much larger XSEDE machines at TACC effectively. It should be noted that, in general,
-the differences in software environment between the IU campus resources and the TACC supercomputers were
-superficial, the real challenge lie in dealing with scaling up the application and navigating the complexity
-of a much larger system. 
+campus and XSEDE resources. Even when the operating environment is not very different on XSEDE resources
+compared to campus resources, researchers can face challenges with the sheer scale and complexity of XSEDE
+resources. In the situation described in this paper, campus bridging amounted to helping the researchers
+redesign their experiments and scale up their workflows to move effectively from their local workstations, to IU's modest
+sized cluster environment, and then on to use the much larger XSEDE machines at TACC. It should be
+noted that, in general, the differences in software environment between the IU campus resources and the TACC
+supercomputers were superficial, the real challenges lie in dealing with scaling up the application and
+navigating the complexity of a much larger system.
 
-In this paper we introduce a potential   In this paper we discuss how we bridged
-the gap between the different approaches that are needed to succeed on machines of different sizes.
+In this paper we introduce the new role of {\bf CAMPUS BRIDGIST} to help address the challenges faced by
+researchers when moving from their workstation to XSEDE resources. A {\bf CAMPUS BRIDGIST} is someone who
+helps to bridge the gap between domain science and computer science and helps researchers who want to use
+XSEDE resources move their applications from small scale campus resources to much larger XSEDE resources. The
+{\bf CAMPUS BRIDGIST} is mostly a technologist who is able to apply many different approaches to scaling up
+applications, but should also be familiar with the common challenges of the scientific domain and should be
+able to communicate effectively about XSEDE resources with researchers who may have little or no HPC
+experience. The {\bf CAMPUS BRIDGIST} role is distinct from the currently existing Campus Champion role and
+the role filled by the Extended Collaborative Support Service (ECSS) team. As the name implies, the {\bf
+  CAMPUS BRIDGIST} role bridges the gap between the Campus Champion role which is designed to provide
+information, guidance, and facilitate gaining access to XSEDE resources and the ECSS role which is designed to
+provide in depth analysis, insight and development for a particular scientific or engineering challenge. The
+role of {\bf CAMPUS BRIDGIST} may, in fact, be filled by the same people who are currently Campus Champions or
+ECSS team members, in many ways the functions of the {\bf CAMPUS BRIDGIST} role are an extension of those
+already existing ECSS and Campus Champion functions. In this paper we discuss how, by filling the role of
+{\bf CAMPUS BRIDGIST}, we were able to bridge the gap between many differently sized resources and to help
+researchers in the field of population genomics use some of the largest XSEDE resources to conduct a research
+program at a magnitude that was unprecedented.
 
-The current incarnation of the mlRho software is a serial code. However, the investigation we have conducted
-with our XSEDE allocation was embarrassingly parallel in nature, so the work for each species was able to be
-divided among many computational processes. To manage hundreds of processes for each of the 40+ species of
-interest, we used the BigJob pilot-job tool, which is currently available on many XSEDE resources. BigJob
-allowed us to distribute the analyses for each species across hundreds to a few thousand processor cores
-depending on the genome sizes of species. Thus far we have conducted ML recombination rate studies on a total
-of {\bf XX} individual genomes. In addition to the use of the BigJob pilot tool we have done extensive performance
-analysis of the mlRho code and, with biologist and computer scientists working in conjunction, have been able
-to improve the runtime of the code by a factor of {\bf XX}. We have also begun work on a parallel
-implementation of the code, and will present a comparison between the parallel implementation and the BigJob
-framework.
+Researchers in the Indiana University (IU) Department of Biology have been conducting studies into population
+genomics and evolution for some time. A newly developed software program called mlRho \cite{MEC:MEC4482}, is
+being used to study ecological and genetic parameters in different populations. This incarnation of the
+mlRho software is a serial code. However, the investigation we have conducted with our XSEDE allocation was
+embarrassingly parallel in nature, so the work for each species was able to be divided among many
+computational processes. To manage hundreds of processes for each of the 40+ species of interest, we used the
+BigJob pilot-job tool, which is currently available on many XSEDE resources. BigJob allowed us to distribute
+the analyses for each species across hundreds to a few thousand processor cores depending on the genome sizes
+of species. Thus far we have conducted ML recombination rate studies on a total of {\bf XX} individual
+genomes. In addition to the use of the BigJob pilot tool we have done extensive performance analysis of the
+mlRho code and, with biologist and computer scientists working in conjunction, have been able to improve the
+runtime of the code by a factor of {\bf XX}.
 
 The remainder of the paper is organized as follows: section \ref{sec:background} gives some insight into the
 computational methodologies and principles of biology being explored by the mlRho code. Section
@@ -291,7 +308,7 @@ species with accuracy that was previously unachievable.
 
 \subsection{Program Description}
 \texttt{mlRho} estimates mutation, recombination, and sequencing error from genome
-sequences~\cite{hau10:mlr}. The underlying data consists of assembled sequencing reads obtained from a single
+sequences~\cite{MEC:MEC4482}. The underlying data consists of assembled sequencing reads obtained from a single
 diploid individual. Such data are collected, for example, for the 1000 human genome project. At each sequenced
 position \texttt{mlRho} reads the number of \ty{A}s, \ty{C}s, \ty{G}s, and \ty{T}s, a ``profile'', from a
 file. Given a mutation and error rate, \ty{mlRho} computes two probabilities for each profile: The
@@ -653,23 +670,23 @@ $\rho=10^{-2}$ or $\rho=10^{-3}$. However, the combination of low
 mutation and recombination ($\theta=\rho=10^{-3}$) gives very noisy
 results, demonstrating the method's limit of resolution.
 
-\begin{figure}
-  \begin{center}
-    \resizebox{\textwidth}{!}{
-      \begin{tabular}{cc}
-        \textbf{A} & \textbf{B}\\
-        \input{figures/theta} & \input{figures/rho}
-      \end{tabular}
-    }
-  \end{center}
-\caption{Testing the accuracy of \ty{mlRho}. \textbf{A}: The mutation
-  rate estimator, $\hat\theta$, as a function of the sequencing error
-  rate, $\epsilon$; sequence length: $10^8$. \textbf{B}: The
-  recombination rate estimator, $\hat\rho$, as a function of pairwise
-  distance; the data set consists of 1000 pairs of 100kb sequences
-  with $\theta=0.01$ and $\epsilon=10^{-4}$; horizontal lines:
-  expected value. Coverage: 10.}\label{fig:test}
-\end{figure}
+% \begin{figure}
+%   \begin{center}
+%     \resizebox{\textwidth}{!}{
+%       \begin{tabular}{cc}
+%         \textbf{A} & \textbf{B}\\
+%         \input{figures/theta} & \input{figures/rho}
+%       \end{tabular}
+%     }
+%   \end{center}
+% \caption{Testing the accuracy of \ty{mlRho}. \textbf{A}: The mutation
+%   rate estimator, $\hat\theta$, as a function of the sequencing error
+%   rate, $\epsilon$; sequence length: $10^8$. \textbf{B}: The
+%   recombination rate estimator, $\hat\rho$, as a function of pairwise
+%   distance; the data set consists of 1000 pairs of 100kb sequences
+%   with $\theta=0.01$ and $\epsilon=10^{-4}$; horizontal lines:
+%   expected value. Coverage: 10.}\label{fig:test}
+% \end{figure}
 
 
 
@@ -701,7 +718,7 @@ In fact, the originally proposed work load has been completed. We basically did 
 % initial runs of your .tex file to
 % produce the bibliography for the citations in your paper.
 \bibliographystyle{abbrvnat}
-\bibliography{xsede13,references}  % sigproc.bib is the name of the Bibliography in this case
+\bibliography{xsede13}  % sigproc.bib is the name of the Bibliography in this case
 % You must have a proper ".bib" file
 %  and remember to run:
 % latex bibtex latex latex
