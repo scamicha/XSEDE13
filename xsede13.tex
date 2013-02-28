@@ -307,6 +307,7 @@ IU, and XSEDE computational resources, we have been able to examine the recombin
 species with accuracy that was previously unachievable.
 
 \subsection{Program Description}
+\abhi{say something about the serial nature of the code}
 The \texttt{mlRho} software estimates mutation, recombination, and sequencing error rates from genome
 sequences~\cite{MEC:MEC4482}. The underlying data consists of assembled sequencing reads obtained from a
 single diploid individual. Such data are collected, for example, for the 1000 human genome project. At each
@@ -399,8 +400,8 @@ to be extracted from the input files (usually of giga-byte sizes) and maximum li
 have to be calculated for every distance.
 
 
-\section{Deploying mlRho on XSEDE Resources}\label{sec:resources}
-We have been using Quarry, a local IU resource before we decided to use XSEDE resources. Quarry is a 2960 core machine, where as Ranger is a 62,976 core machine, Kraken is a 112,896 core machine and Stampede is a 102400 core machine. \abhi{comment to self, consider adding a table}  The environment on Quarry is similar to that of XSEDE machines referred to here and the way users access it are also similar. The central difference is the size of the machines and therefore the biggest challenge is scaling our workflow accordingly. We explain how we made the transition and discuss the tools that we used to succeed on XSEDE.
+\section{Transitioning to XSEDE}\label{sec:resources}
+When we first came up with a research plan, we calculated that we need 12 million compute hours to complete the project without sacrificing any of the objectives. At this point, we were using Quarry, a local IU resource, but it was clear that we needed a bigger machine to complete the calculations in a reasonable period of time. Quarry is a 2960 core machine, where as XSEDE machines such as Ranger, Stampede and Kraken are much larger. Figure \ref{fig:scaling} shows the number of nodes and cores on each machine. The environment on Quarry is similar to that of XSEDE machines referred to here. The central difference is the size of the machines and therefore the biggest challenge is scaling our workflow accordingly. We explain how we made the transition and discuss the tools that we used to succeed on this mission.
 \begin{table}
 \centering
 \begin{tabular}{| l  | l  | l  | l  | l  | l  | l  |} \hline
@@ -422,16 +423,11 @@ Nodes & 370 & 3936 & 6400 & 9408   \\ \hline
 \label{fig:scaling}
 \end{figure}
 
-\abhi{notes: startup alloc help -- CBridgers's help needed, scalability tests, etc}
-We were faced with multiple questions at the start. Which of the large XSEDE machines suits us the best? Should we use more than one machine? How many SUs do we need to complete our research? Should we do everything we can or compress the amount of work we want to do depending on the number of SUs we can get from XSEDE?
-
-We started by requesting startup allocations on Ranger and Kraken.  \abhi{cite something?} While it is possible to get good throughput submitting serial jobs to the scheduler on Quarry, this is not an optimal approach on machines like Ranger and Kraken. The scheduling policies on large machines usually favor large jobs. Many supercomputing centers have policies that limit the number of jobs a user can have in the queue. 
-
-
 \subsection{Research Plan}\label{sec:plan}
 
 \abhi{change the following paragraph to indicate what we actually did and why. i.e. doing more kbp/genome and may be more genomes}
-We plan to use mlRho to estimate the LD and recombination patterns out to 100 kilo base-pair (kbp) distances for 46 diploid eukaryotic genomes, covering a broad range of genome sizes.%, as shown in table~\ref{table:genome_list}. 
+
+Once we decided to transition to XSEDE resources, we applied for a startup allocation on Ranger and Kraken to benchmark our application and do a scaling study to accurately estimate the number of SUs we would need. It was immediately apparent to us that we would need at least 15 million SUs to complete the project without leaving out any of the genomes. But given that the researchers are new to the XSEDE ecology and this is the first time they are applying for a large scale allocation, we wanted to stay about the 5 million SU mark. To do this, we pared down the list to 46 diploid eukaryotic genomes, covering a broad range of genome sizes.
 The 100 kbp cutoff value is chosen because theory suggests that a good measure
 of LD in a genome should span at least 50$-$100 kbp. Given that in eukaryotes, recombination rates range
 between 0.001$-$1 event per Mbp~\cite{annurev-genom-082410-101412}, a 100 kbp window across a genome provides
@@ -440,26 +436,14 @@ meiotic event.
 
 Our approach to linkage analyses requires diploid genomes that have not been intentionally inbred  (e.g., some plant genomes) or sequenced from several individuals. The list of 46 species are carefully selected from several important taxonomic groups to represent organisms with different ecology, population history, and reproductive strategies  (e.g., asexual vs. sexual). This list  thus constitutes a core dataset to develop a broad survey of linkage disequilibrium, population recombination rate, and population histories across eukaryotes. Furthermore, we have included genomes from multiple individuals for both {\it Daphnia pulex} and humans to explore intraspecific differences in linkage patterns and population histories. 
 
-\subsection{Design of Experiments}
-We have carefully constructed a detailed plan on how to proceed with our experiments. In section \ref{sec:tests}, we have shown that we can scale to 128 processes reading from the same file with no performance degradation. We estimate that we can feasibly scale-up to $\approx$500 processes reading from the same data file, without noticeable performance degradation. By making multiple copies of the data file, we could scale-up to $\approx$ 5000 processes. Job requests of 5000 processes on Ranger and Kraken are appropriate and we have not experienced extremely long wait times with past BigJob experiments. If we succeed in implementing this design, we think we can complete our analysis within four to five months from the time of the allocation award. This proposed framework is already working on Ranger, and we are in the process of implementing it on Kraken. 
-
-In our initial testing of the three sample genomes, we worked out a few issues that could have affected
-scalability. One of those issues was data access and file striping. When we had scaled up to 128 cores we
-noticed intermittent I/O issues. Since all the concurrent instances read from a single file, if that file is
-singly striped in a Lustre file system it will introduce a large load on the Lustre servers. We have remedied
-this issue by moving the data files to the scratch file system on Ranger and striping the data files 16
-ways. While this only occurred with the larger (11 and 31 GB) data files, we are aware that this might limit
-our scalability. In the future, if I/O becomes an issue for scalability, we plan to use multiple copies of the
-same data file to prevent an excessive number of concurrent processes from reading from the same file at the same time.
-
 \subsection{SAGA BigJob framework}
 \label{sec:bigjob}
 
+We plan to use BigJob to bundle our single-core serial mlRho simulations. We have integrated mlRho with BigJob and conducted several experiments on Ranger which have shown good performance and scalability. 
+
 BigJob is pilot-job tool available on many XSEDE resources such as Kraken, Ranger and Lonestar. Many researchers have successfully used BigJob~\cite{bigjob_web} to bundle hundreds of smaller jobs into larger, more manageable groups of jobs~\cite{Luckow:2008fp, async_repex11}. 
 
-BigJob allows the user to maintain a list of processors allocated after the job request becomes active. The user can then assign these processors and start and manage jobs. For more details on the BigJob implementation see reference~\cite{saga_bigjob_condor_cloud}. The main benefit of doing this is that instead of submitting thousands of single core job requests to the queue, we can submit hundreds of large job requests ($\approx$ 500 to 5000 cores) to the queue. This reduces the overall job submissions to the queue and thereby, to an extent, time spent waiting in the queue. This job size is also more appropriate for many of the XSEDE machines. 
-
-We plan to use BigJob to bundle our single-core serial mlRho simulations. We have integrated mlRho with BigJob and conducted several experiments on Ranger which have shown good performance and scalability. The experiments are explained in the next section. 
+BigJob allows the user to maintain a list of processors allocated after the job request becomes active. The user can then assign these processors and start and manage jobs. For more details on the BigJob implementation see reference~\cite{saga_bigjob_condor_cloud}. The main benefit of doing this is that instead of submitting thousands of single core job requests to the queue, we can submit hundreds of large job requests ($\approx$ 500 to 5000 cores) to the queue. This reduces the overall job submissions to the queue and thereby, to an extent, time spent waiting in the queue. This job size is also more appropriate for many of the XSEDE machines. The experiments are explained in the next section. 
 
 
 \subsection{mlRho Scalability Tests using BigJob on Ranger }
@@ -472,6 +456,31 @@ We took three different organisms based on the size of their genome. We selected
 Figure~\ref{fig:scaling} shows that the distance traveled, irrespective of the genome, size and the number of concurrent instances, increases linearly with number of concurrent instances being run. Table~\ref{table:bj_runs} shows the distance traveled by each instance in 24 hours for different genomes. This also shows that the distance traveled is a function of the size of the genome data file. As the reader can observe, distance traveled is directly proportional to the size of the genome data file. We were able to estimate the SUs required per distance per GB of genome data file using each of the three genomes -- all three estimates are nearly identical. Based on these results, we are confident that we can scale up to more than 1000 concurrent instances per genome using BigJob.
 
 
+\subsection{XSEDE Allocation}
+\abhi{notes: startup alloc help -- CBridgers's help needed, scalability tests, etc}
+We were faced with multiple questions at the start. Which of the large XSEDE machines suits us the best? Should we use more than one machine? How many SUs do we need to complete our research? Should we do everything we can or compress the amount of work we want to do depending on the number of SUs we can get from XSEDE?
+
+We started by requesting startup allocations on Ranger and Kraken.  \abhi{cite something?} While it is possible to get good throughput submitting serial jobs to the scheduler on Quarry, this is not an optimal approach on machines like Ranger and Kraken. The scheduling policies on large machines usually favor large jobs. Many supercomputing centers have policies that limit the number of jobs a user can have in the queue. 
+
+\begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
+\centering
+\includegraphics[width=0.48\textwidth]{figures/mlrho-benchmarks.png}
+\caption{\abhi{replace with gnuplot version}}
+\label{fig:stampede-bench}
+\end{figure}
+
+
+\subsection{Design of Experiments}
+We have carefully constructed a detailed plan on how to proceed with our experiments. In section \ref{sec:tests}, we have shown that we can scale to 128 processes reading from the same file with no performance degradation. We estimate that we can feasibly scale-up to $\approx$500 processes reading from the same data file, without noticeable performance degradation. By making multiple copies of the data file, we could scale-up to $\approx$ 5000 processes. Job requests of 5000 processes on Ranger and Kraken are appropriate and we have not experienced extremely long wait times with past BigJob experiments. If we succeed in implementing this design, we think we can complete our analysis within four to five months from the time of the allocation award. This proposed framework is already working on Ranger, and we are in the process of implementing it on Kraken. 
+
+In our initial testing of the three sample genomes, we worked out a few issues that could have affected
+scalability. One of those issues was data access and file striping. When we had scaled up to 128 cores we
+noticed intermittent I/O issues. Since all the concurrent instances read from a single file, if that file is
+singly striped in a Lustre file system it will introduce a large load on the Lustre servers. We have remedied
+this issue by moving the data files to the scratch file system on Ranger and striping the data files 16
+ways. While this only occurred with the larger (11 and 31 GB) data files, we are aware that this might limit
+our scalability. In the future, if I/O becomes an issue for scalability, we plan to use multiple copies of the
+same data file to prevent an excessive number of concurrent processes from reading from the same file at the same time.
 
 
 \section{Optimization and Performance Tuning of mlRho}\label{sec:optimization}
