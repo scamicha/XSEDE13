@@ -405,18 +405,18 @@ have to be calculated for every distance.
 
 \section{Transitioning to XSEDE}\label{sec:resources}
 When we first came up with a research plan, we calculated that we need 12 million compute hours to complete the project without sacrificing any of the objectives. At this point, we were using Quarry, a local IU resource, but it was clear that we needed a bigger machine to complete the calculations in a reasonable period of time. Quarry is a 2960 core machine, where as XSEDE machines such as Ranger, Stampede and Kraken are much larger. Figure \ref{fig:scaling} shows the number of nodes and cores on each machine. The environment on Quarry is similar to that of XSEDE machines referred to here. The central difference is the size of the machines and therefore the biggest challenge is scaling our workflow accordingly. We explain how we made the transition and discuss the tools that we used to succeed on this mission.
-\begin{table}
-\centering
-\begin{tabular}{| l  | l  | l  | l  | l  | l  | l  |} \hline
-	&Quarry & Ranger & Stampede & Kraken\\ \hline
-Nodes & 370 & 3936 & 6400 & 9408   \\ \hline
-\# Cores	& 2960  & 62976&102400 & 112896\\ 
-\hline
-
-\end{tabular}
-\caption{\abhi{decide table vs plot}  } 
-\label{table:cache_comp}
-\end{table}
+%\begin{table}
+%\centering
+%\begin{tabular}{| l  | l  | l  | l  | l  | l  | l  |} \hline
+%	&Quarry & Ranger & Stampede & Kraken\\ \hline
+%Nodes & 370 & 3936 & 6400 & 9408   \\ \hline
+%\# Cores	& 2960  & 62976&102400 & 112896\\ 
+%\hline
+%
+%\end{tabular}
+%\caption{\abhi{decide table vs plot}  } 
+%\label{table:cache_comp}
+%\end{table}
 
 
 \begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
@@ -459,15 +459,23 @@ We took three different organisms based on the size of their genome. We selected
 Figure~\ref{fig:bj-scaling} shows that the distance traveled, irrespective of the genome, size and the number of concurrent instances, increases linearly with number of concurrent instances being run. We have verified this behavior on Stampede with an optimized version of mlRho with similar results. We are unable to repeat this on Ranger as it is in the process of getting decommissioned. We discuss how we analyzed the performance and optimized the code in the next section. 
 
 %Table~\ref{table:bj_runs} shows the distance traveled by each instance in 24 hours for different genomes. This also shows that the distance traveled is a function of the size of the genome data file. As the reader can observe, distance traveled is directly proportional to the size of the genome data file. We were able to estimate the SUs required per distance per GB of genome data file using each of the three genomes -- all three estimates are nearly identical. Based on these results, we are confident that we can scale up to more than 1000 concurrent instances per genome using BigJob.
-
-\begin{figure*}[htp]
-  \centering
-
-
-  \subfloat[Scaling characteristics of version 1.10 on Ranger ]{\label{fig:ranger}\includegraphics[width=80mm]{figures/scaling-ranger.png}}
-  \subfloat[Scaling characteristics of version 2.1 on Stampede]{\label{fig:stampede}\includegraphics[width=80mm]{figures/scaling-stampede.png}}
-  \label{fig:bj-scaling}\caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases linearly with the number instances of mlRho. The Y-Axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The X-Axis show the number of concurrent mlRho processes running. }
+\begin{figure*} %[h!] % t=top, b=bottom, h=here, p=separate page
+\centering
+\includegraphics[width=0.78\textwidth]{figures/bj-scaling.pdf}
+\caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases linearly with the number instances of mlRho. The Y-Axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The X-Axis shows the number of concurrent mlRho processes running. }
+\label{fig:stampede-bench}
 \end{figure*}
+
+
+
+%\begin{figure*}[htp]
+%  \centering
+%
+%
+%  \subfloat[Scaling characteristics of version 1.10 on Ranger ]{\label{fig:ranger}\includegraphics[width=80mm]{figures/scaling-ranger.png}}
+%  \subfloat[Scaling characteristics of version 2.1 on Stampede]{\label{fig:stampede}\includegraphics[width=80mm]{figures/scaling-stampede.png}}
+%  \label{fig:bj-scaling}\caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases linearly with the number instances of mlRho. The Y-Axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The X-Axis shows the number of concurrent mlRho processes running. }
+%\end{figure*}
 
 %\begin{table*}
 %\centering
