@@ -59,7 +59,7 @@
 %\usepackage{listings}
 %\usepackage{times}
 %\usepackage{paralist}
-%\usepackage{epsfig}
+\usepackage{epsfig}
 %\usepackage{subfigure}
 %\usepackage{longtable}
 %%\usepackage[hypertex]{hyperref}
@@ -78,7 +78,9 @@
 %\usepackage{setspace}
 %\sloppy
 %\usepackage{geometry}
-\usepackage{listings}
+%\usepackage{listings}
+\usepackage{epstopdf}
+\usepackage{grffile}
 
 
 \newif\ifdraft
@@ -535,28 +537,25 @@ Biology to improve the serial performance of the code. As a result of the invest
 has been recently released, which is vastly more efficient and delivers much more performance when compared to
 the original version. While the work described in the previous sections could be addressed by the {\bf CAMPUS
   BRIDGIST} role, the analysis and optimization described in this section would most likely be associated with
-the XSEDE ECSS team, in this particular case both roles were fulfilled by a single team member at PTI,
-however it is certainly possible that these two roles could be filled by different teams at different
-institutions.
+the XSEDE ECSS team, in this particular case both roles were fulfilled by a single team member at PTI, however
+it is certainly possible that these two roles could be filled by different teams at different institutions.
 
-\section{Speeding up mlRho}
+\subsection{Implementation of  Performance Analysis Findings}
 Research staff at PTI began code optimization with \texttt{mlrho} version 1.10. As a first step we compiled
 the code with compilers other than the standard GNU compiler that had been used by \texttt{mlrho}. Both the
 Intel and PGI compilers produced a runtime improvement of $\approx$ 10\% over the GNU compiler on Ranger, this
 is a fairly typical result that the optimization team at PTI has seen in many instances. From this point we
-determined that further improvements would most likely be gained by modifications to the source code. To inform
-the core developers at the IU and Max Planck Institute for Evolutionary Biology research labs as to where
-their efforts would be best spent, we conducted a detailed analysis of \texttt{mlrho} version 1.10 using the
-Vampir toolchain. Our 
+determined that further improvements would most likely be gained by modifications to the source code. To
+inform the core developers at the IU and Max Planck Institute for Evolutionary Biology research labs as to
+where their efforts would be best spent, we conducted a detailed analysis of \texttt{mlrho} version 1.10 using
+the Vampir toolchain. The analysis led the core developers to focus on two aspects of the code: data handling
+and repeated computation. As to data handling, many profiles occur repeatedly in a data set. To address this
+an additional program, \ty{formatPro}, was written to compress the raw profiles. The \ty{formatPro} program reads profiles either from a text
+file, or from a BAM file, the  standard format for distributing genome alignment files \citep{li09:seq}. 
 
-  by focusing on two aspects of the code: data
-handling and repeated computation. As to data handling, many profiles occur repeatedly in a data set and BH
-wrote the program \ty{formatPro} for compressing the raw profiles. \ty{formatPro} reads profiles either from a
-text file, or from a BAM file. BAM is the standard format for distributing genome alignment files over the
-net~\citep{li09:seq}. \ty{mlRho} comes with documentation and example scripts for accessing such data.
-
-\ty{formatPro} writes a binary table of unique
-profiles:
+By introducing this new method of data storage performance increased by more than a factor of two from version
+1.16 to 1.21 (see figure \ref{fig:stampede-bench}). The \ty{formatPro} program writes a binary table of unique
+profiles.
 % \begin{lstlisting}
 % /* write tag for recognizing file type */
 % fwrite("sum",sizeof(char),3,profileF);
@@ -565,14 +564,14 @@ profiles:
 % /* write the profiles */
 % fwrite(profiles,sizeof(Profile),numNode,profileF);
 % \end{lstlisting}
-where a profile is
+%where a profile is
 % \begin{lstlisting}
 % typedef struct profile{  
 %   int profile[4];        /* profile               */
 %   int n;                 /* number of occurrences */
 % }Profile;
 % \end{lstlisting}
-This binary file can be inspected using the program \ty{inspectPro}:
+The binary file can then be inspected using the program \ty{inspectPro}.
 % \begin{verbatim}
 % inspectPro profileDb.sum | head -n 3
 % #ID	Count	A	C	G	T
@@ -580,22 +579,21 @@ This binary file can be inspected using the program \ty{inspectPro}:
 % 1	1410182	4	0	0	0
 % \end{verbatim}
 In addition to the profiles file, \ty{formatPro} writes a binary file
-listing the profile ID at every genome position:
+listing the profile ID at every genome position.
 % \begin{verbatim}
 % inspectPro profileDb.pos | head -n 3
 % #Pos	Pro
 % 1	0
 % 2	1
 % \end{verbatim}
-Finally, \ty{formatPro} writes a binary file of the contig lengths
+Finally, \ty{formatPro} writes a binary file of the contig lengths.
 % \begin{verbatim}
 % inspectPro profileDb.con | head -n 3
 % #ID	Length
 % 0	434
 % 1	32
 % \end{verbatim}
-
-\ty{mlRho} reads the profiles from the \ty{*.sum} file:
+The \ty{mlRho} program can then read the profiles from the files produced by \ty{formatPro}.
 % \begin{lstlisting}
 % /* read first three characters */
 % fread(&tag,sizeof(char),3,fp);
@@ -610,12 +608,16 @@ Finally, \ty{formatPro} writes a binary file of the contig lengths
 % setProfiles(profiles);
 % setNumProfiles(numProfiles);
 % \end{lstlisting}
-Notice that the profiles are read individually rather than in a single
+The profiles are read individually rather than in a single
 step, because we found that this was
-faster. 
+faster. The improvement in data handling introduced with these changes resulted in an overall speedup of the
+serial code of a factor of 2-4X. The next focus was to look at the repeated computation that occurred in the
+\ty{mlRho} program. 
 
-In the original version, the likelihood computation iterated over all
-positions. Now it iterates over the much smaller number of unique profiles:
+In the 1.10 version of the \ty{mlRho} program, the likelihood computation iterated over all positions. By
+introducing several improvements in how the likelihoods are calculated, the program now iterates over the much
+smaller number of unique profiles, this improvement can be noticed in figure \ref{fig:stampede-bench} between
+versions 1.21 and 1.23.
 % \begin{lstlisting}
 % for(i=0;i<numProfiles;i++){
 %   /* likelihood given that position is homozygous */
@@ -626,7 +628,7 @@ positions. Now it iterates over the much smaller number of unique profiles:
 %   likelihood += log(l) * profiles[i].n;
 % }
 %\end{lstlisting}
-These likelihoods can be written to disk for future reference:
+The calculation of the unique likelihoods are now written to disk for future reference.
 % \begin{lstlisting}
 % /* write tag for identifying file */
 % fwrite("lik",sizeof(char),3,fp);
@@ -641,13 +643,11 @@ These likelihoods can be written to disk for future reference:
 % fwrite(getLtwos(),sizeof(double),getNumProfiles(),fp);
 % \end{lstlisting}
 
-In the disequilibrium analysis of the original version, the
-single-site likelihoods were recomputed at every step. Now they are
-either read from disk or stored after the first pass across the
-data. In addition, we noticed that by ignoring the order of two
-profiles, we could halve the number of distinct profile pairs stored in
-a search tree. The likelihood computation during traversal of this tree is now based entirely on
-precomputed probabilities:
+In the disequilibrium analysis of the 1.10 version, the single-site likelihoods were recomputed for every
+step. To improve efficiency they are now either read from disk or stored after the first pass across the
+data. In addition, we noticed that by ignoring the order of two profiles, we could halve the number of
+distinct profile pairs stored in a search tree. The likelihood computation during traversal of this tree is
+now based entirely on precomputed probabilities.
 % \begin{lstlisting}
 % void traverse(int a, Node *np, double h0, double h2, double complementHalf){
 %   if(np != NULL){
@@ -663,14 +663,12 @@ precomputed probabilities:
 %   }
 % }
 % \end{lstlisting}
-where \ty{h0} is the probability of observing a homozygous pair and
-\ty{h2} the probability of observing a heterozygous pair. These two
-quantities are a function of the rate of recombination. The variable
-\ty{complementHalf} simply stores $1-(\ty{h0} + \ty{h2})$.
-
-The combination of better data handling and careful avoidance of
-repeated computation, lead to a 60-fold speedup of \ty{mlRho} while
-maintaining its minimal memory requirement.
+% where \ty{h0} is the probability of observing a homozygous pair and
+% \ty{h2} the probability of observing a heterozygous pair. These two
+% quantities are a function of the rate of recombination. The variable
+% \ty{complementHalf} simply stores $1-(\ty{h0} + \ty{h2})$.
+The combination of better data handling and careful avoidance of repeated computation, lead to an overall 60-fold
+speedup of \ty{mlRho} while maintaining its minimal memory requirement.
 \begin{table}
 \centering
 \begin{tabular}{| l  | l  | l  | l  | l  | l  | l  |} \hline
@@ -688,26 +686,26 @@ PGI &418 & N/A   & N/A &N/A\\
 \label{table:cache_comp}
 \end{table}
 
-\section{Validation}
-To determine the accuracy of the revamped \ty{mlRho}, we simulated
-sequencing data with known mutation and recombination
-rates. Figure~\ref{fig:test}A shows that the mutation rate is
-accurately estimated even if exceeded by the error
-rate. Similarly, Figure~\ref{fig:test}B shows that the recombination rate is
-slightly underestimated if the mutation rate $\theta=10^{-2}$ and
-$\rho=10^{-2}$ or $\rho=10^{-3}$. However, the combination of low
-mutation and recombination ($\theta=\rho=10^{-3}$) gives very noisy
-results, demonstrating the method's limit of resolution.
+% \subsection{Code Validation}
+% To determine the accuracy of the revamped \ty{mlRho}, we simulated sequencing data with known mutation and
+% recombination rates. Figure~\ref{fig:test}A shows that the mutation rate is accurately estimated even if
+% exceeded by the error rate. Similarly, Figure~\ref{fig:test}B shows that the recombination rate is slightly
+% underestimated if the mutation rate $\theta=10^{-2}$ and $\rho=10^{-2}$ or $\rho=10^{-3}$. However, the
+% combination of low mutation and recombination ($\theta=\rho=10^{-3}$) gives very noisy results, demonstrating
+% the method's limit of resolution.
 
-% \begin{figure}
+% \begin{figure*}
 %   \begin{center}
-%     \resizebox{\textwidth}{!}{
-%       \begin{tabular}{cc}
-%         \textbf{A} & \textbf{B}\\
-%         \input{figures/theta} & \input{figures/rho}
-%       \end{tabular}
-%     }
-%   \end{center}
+% \unitlength1in
+% \begin{minipage}{0.45\linewidth}
+% \centering
+% \includegraphics{figures/theta}
+% \end{minipage}
+% \begin{minipage}{0.45\linewidth}
+% \centering
+% \includegraphics{figures/rho}
+% \end{minipage}
+
 % \caption{Testing the accuracy of \ty{mlRho}. \textbf{A}: The mutation
 %   rate estimator, $\hat\theta$, as a function of the sequencing error
 %   rate, $\epsilon$; sequence length: $10^8$. \textbf{B}: The
@@ -715,12 +713,11 @@ results, demonstrating the method's limit of resolution.
 %   distance; the data set consists of 1000 pairs of 100kb sequences
 %   with $\theta=0.01$ and $\epsilon=10^{-4}$; horizontal lines:
 %   expected value. Coverage: 10.}\label{fig:test}
+%   \end{center}
 % \end{figure}
 
-
-
 \section{Experiments on XSEDE}{\label{sec:experiments}
-Migrating from the local cluster Quarry and Mason to Ranger on Xsede is smooth because of the similar computational environment on these clusters. All the data files were easily transferred by standard means. The necessary modules and libraries are all available on Ranger and Stampede.
+Migrating from the local cluster Quarry and Mason to Ranger on XSEDE is smooth because of the similar computational environment on these clusters. All the data files were easily transferred by standard means. The necessary modules and libraries are all available on Ranger and Stampede.
  
 My experience with running mlRho analysis using Bigjob on Ranger consisted of two different phases in terms of the program performance. When we were developing this idea to use Bigjob to run the analysis in an embrassingly parallel way (prior to July 2012), the performance of Bigjob was excellent. All the multicore jobs were completed nicely. However, after the approval of our allocation in September 2012, Bigjob had been upgraded. There seems a number of issues with Bigjob. First of all, the way Bigjob is run involves using the command nohup. As all the jobs are submitted on the login node of Ranger, it is required that no more than 4 nohup commands can be run at one time. It occurred a couple times that I submitted more than 4 bigjobs on the login node and my jobs were all suspended. Subsequently, I was banned from running the jobs. Unfortunately, I was not notified until I found all my jobs were not running for two to three days. This seems to me rather counter productive. For my project, I need to submit ~100 multicore jobs (requiring on average 1024-4096 cores) in total. I would like to have the capacity to submit a number of jobs in the queue and collect data when the jobs are done. Assuming each job is done right, submitting four jobs at a time is not problematic. What is truly problematic is that I encountered a situation that many cores (up to 60\% of the cores) in the same job cannot finish the analysis properly, resulting many missing values. Finding out the missing values and creating new jobs will not necessarily solve the problem, because I often had cores not working properly in these new jobs.
  
