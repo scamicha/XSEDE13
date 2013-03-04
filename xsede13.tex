@@ -424,7 +424,7 @@ When we first came up with a research plan, we calculated that we need 12 millio
 \begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
 \includegraphics[width=0.48\textwidth]{figures/cores-nodes.png}
-\caption{\abhi{replace with gnuplot version}}
+\caption{The graph shows the huge change in the size of the machines that the users experience when they move to XSEDE. Mason and Quarry are IU resources, where as Ranger, Stampede and Kraken are XSEDE resources. \abhi{I was thinking about including BR/BR 2}}
 \label{fig:scaling}
 \end{figure}
 
@@ -464,7 +464,7 @@ Figure~\ref{fig:bj-scaling} shows that the distance traveled, irrespective of th
 \begin{figure*} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
 \includegraphics[width=0.78\textwidth]{figures/bj-scaling.pdf}
-\caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases linearly with the number instances of mlRho. The Y-Axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The X-Axis shows the number of concurrent mlRho processes running. }
+\caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases nearly linearly with the number instances of mlRho. The Y-Axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The X-Axis shows the number of concurrent mlRho processes running. }
 \label{fig:stampede-bench}
 \end{figure*}
 
@@ -504,14 +504,6 @@ Figure~\ref{fig:bj-scaling} shows that the distance traveled, irrespective of th
 We started by requesting startup allocations on Ranger and Kraken.  \abhi{cite something?} While it is possible to get good throughput submitting serial jobs to the scheduler on Quarry, this is not an optimal approach on machines like Ranger and Kraken. The scheduling policies on large machines usually favor large jobs. Many supercomputing centers have policies that limit the number of jobs a user can have in the queue. 
 
 Once we decided to apply for an XSEDE allocation, we constructed a research and computational plan that we laid out in prior sections \ref{sec:plan}, \ref{sec:bigjob}, \ref{sec:tests}. We choose Ranger because BigJob was in an experimental state on Kraken back then. We estimated that we would need 6.3 million SUs on Ranger to omelet our research. 
-
-
-\begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
-\centering
-\includegraphics[width=0.48\textwidth]{figures/mlrho-benchmarks.png}
-\caption{\abhi{replace with gnuplot version}}
-\label{fig:stampede-bench}
-\end{figure}
 
 
 \subsection{Design of Experiments}
@@ -669,22 +661,30 @@ now based entirely on precomputed probabilities.
 % \ty{complementHalf} simply stores $1-(\ty{h0} + \ty{h2})$.
 The combination of better data handling and careful avoidance of repeated computation, lead to an overall 60-fold
 speedup of \ty{mlRho} while maintaining its minimal memory requirement.
-\begin{table}
-\centering
-\begin{tabular}{| l  | l  | l  | l  | l  | l  | l  |} \hline
-	&Ranger & \multicolumn{3}{|c|}{Mason}\\ \hline
-	& 1.11  & 1.10&1.11 & 1.14\\ \hline
-GNU & 450 & 508 & 414 & 394   \\
-\hline
-Intel & 405 & 388 & 364 & 346\\
-\hline
-PGI &418 & N/A   & N/A &N/A\\
-\hline
 
-\end{tabular}
-\caption{\abhi{placeholder}The table shoes mlRho runtimes on different machines with different compilers. The runtimes are in seconds. Compiling with the Intel compiler gave us a 10\% speedup compared to GNU/PGI compilers on Mason and Ranger. Future work could include building GSL with Intel compilers.   } 
-\label{table:cache_comp}
-\end{table}
+\begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
+\centering
+\includegraphics[width=0.48\textwidth]{figures/mlrho-benchmarks.png}
+\caption{The graph show the different versions of mlRho benchmarked on a single core on Stampede. The Y-Axis shows the time steps per hour in logarithmic scale. Compared to version 1.10,  2.1 is nearly 50 times faster. }
+\label{fig:stampede-bench}
+\end{figure}
+
+%\begin{table}
+%\centering
+%\begin{tabular}{| l  | l  | l  | l  | l  | l  | l  |} \hline
+%	&Ranger & \multicolumn{3}{|c|}{Mason}\\ \hline
+%	& 1.11  & 1.10&1.11 & 1.14\\ \hline
+%GNU & 450 & 508 & 414 & 394   \\
+%\hline
+%Intel & 405 & 388 & 364 & 346\\
+%\hline
+%PGI &418 & N/A   & N/A &N/A\\
+%\hline
+%
+%\end{tabular}
+%\caption{\abhi{placeholder}The table shoes mlRho runtimes on different machines with different compilers. The runtimes are in seconds. Compiling with the Intel compiler gave us a 10\% speedup compared to GNU/PGI compilers on Mason and Ranger. Future work could include building GSL with Intel compilers.   } 
+%\label{table:cache_comp}
+%\end{table}
 
 % \subsection{Code Validation}
 % To determine the accuracy of the revamped \ty{mlRho}, we simulated sequencing data with known mutation and
