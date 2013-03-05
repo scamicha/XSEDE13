@@ -719,7 +719,7 @@ speedup of \ty{mlRho} while maintaining its minimal memory requirement.
 %   \end{center}
 % \end{figure}
 
-\section{Experiments on XSEDE}{\label{sec:experiments}
+\section{Findings and Preliminary Science Results}\label{sec:results}
 Migrating from the local cluster Quarry and Mason to Ranger on XSEDE is smooth because of the similar computational environment on these clusters. All the data files were easily transferred by standard means. The necessary modules and libraries are all available on Ranger and Stampede.
  
 My experience with running mlRho analysis using Bigjob on Ranger consisted of two different phases in terms of the program performance. When we were developing this idea to use Bigjob to run the analysis in an embrassingly parallel way (prior to July 2012), the performance of Bigjob was excellent. All the multicore jobs were completed nicely. However, after the approval of our allocation in September 2012, Bigjob had been upgraded. There seems a number of issues with Bigjob. First of all, the way Bigjob is run involves using the command nohup. As all the jobs are submitted on the login node of Ranger, it is required that no more than 4 nohup commands can be run at one time. It occurred a couple times that I submitted more than 4 bigjobs on the login node and my jobs were all suspended. Subsequently, I was banned from running the jobs. Unfortunately, I was not notified until I found all my jobs were not running for two to three days. This seems to me rather counter productive. For my project, I need to submit ~100 multicore jobs (requiring on average 1024-4096 cores) in total. I would like to have the capacity to submit a number of jobs in the queue and collect data when the jobs are done. Assuming each job is done right, submitting four jobs at a time is not problematic. What is truly problematic is that I encountered a situation that many cores (up to 60\% of the cores) in the same job cannot finish the analysis properly, resulting many missing values. Finding out the missing values and creating new jobs will not necessarily solve the problem, because I often had cores not working properly in these new jobs.
@@ -734,7 +734,7 @@ The queuing time on Ranger was largely determined by how many jobs each user hav
 The speeding up of mlRho program greatly enabled the expansion of this project. Instead of performing analysis to 100 kilo basepairs, we now can carry analyses up to 1 million basepairs.
 In fact, the originally proposed work load has been completed. We basically did 10 times more than what we planed to do.
 
-\section{Findings and Preliminary Science Results}\label{sec:results}
+
 
 \section{Conclusions}\label{sec:conclusion}
 
