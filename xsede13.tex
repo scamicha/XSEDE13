@@ -52,7 +52,7 @@
 \usepackage{caption}
 \DeclareCaptionType{copyrightbox}
 \usepackage{subcaption}
-%\usepackage{url}
+\usepackage{url}
 %\usepackage{float}
 %\usepackage{times}
 %\usepackage{multirow}
@@ -62,10 +62,13 @@
 \usepackage{epsfig}
 %\usepackage{subfigure}
 %\usepackage{longtable}
-%%\usepackage[hypertex]{hyperref}
+\usepackage{hyperref}   
+\hypersetup{colorlinks=false,urlcolor=blue}
+\hypersetup{pdfborder={0 0 0}}
 %\usepackage{subfigure}
 \usepackage{color}
 \usepackage[numbers]{natbib}
+\usepackage{breakurl}
 %\usepackage{ifpdf}
 %\usepackage{wrapfig}
 %\usepackage{float}
@@ -780,11 +783,32 @@ insights into the evolution of a large number of organisms.
 
 \subsection{Future Work}
 We have begun initial work on deploying the \ty{mlrho} program on the Intel Xeon Phi coprocessor boards
-available on Stampede.
-
+available on Stampede. Since the Phi runs an embedded Linux Operating System \cite{xeon_phi}
+it is relatively easy to launch multiple copies of the \ty{mlrho} binary on the Phi board, assuming
+that the input data set can fit in the memory footprint of the Phi board. In our case we copied input data
+sets to the Phi RAM disk and computed against this copy. Figure \ref{fig:mic-scaling} compares the performance
+of a single Phi board on the {\it F. cylindrus} genome with the scaling measurements presented in figure
+\ref{fig:stampede-bench}. Here we compare to the scaling numbers for the Stampede timings using version 2.1 of
+the \ty{mlrho} software. By using a relatively large number of processes, in this case 488, on the Phi board
+we have been able to achieve throughput that is roughly equal to the throughput of the CPUs on two Stampede
+nodes. We are currently focusing our efforts on integrating the Phi scripts into the BigJob framework and
+adding the Phi workload to the CPU workload. Writing a script for the BigJob framework is fairly
+straightforward, the challenge comes in properly balancing the load between CPU and Phi, particularly when the
+input data access patterns (i.e. the input I/O) is very different for the CPUs and the Phi board.
 
 \section{Conclusions}\label{sec:conclusion}
 
+In all, the project of transitioning and scaling up \ty{mlRho} workloads from campus computational resources
+to XSEDE resources has been very successful, not only from the perspective of accelerating scientific
+discovery, but also from the perspective of providing a very real and useful example of the value of a {\bf
+  CAMPUS BRIDGIST}. Through this project we have shown that a relatively small investment of effort by people
+with the right mix of skills can make a big difference in how challenging it is to transition from local
+resources to XSEDE resources. We propose that XSEDE consider including the {\bf CAMPUS BRIDGIST} role in more
+of its supported projects, particularly those projects with PIs who are relatively new to high performance
+computing concepts like batch scheduling, application scalability, and high performance file systems. As the
+\ty{mlrho} software continues to be improved and applied to more data sets, we hope to continue the excellent
+synergistic relationship between domain scientists, computer scientists, and cyberinfrastructure
+professionals.
 
 
 %ACKNOWLEDGMENTS are optional
