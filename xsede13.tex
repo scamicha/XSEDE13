@@ -210,11 +210,31 @@ Robert Henschel\\
 
 \maketitle
 \begin{abstract}
-An increasing number of researchers are outgrowing their desktops and turning to supercomputers to run their simulations and do their calculations. But today's computational problems are bigger than what individual universities can handle. XSEDE is the first place researchers turn to when they outgrow their campus resources. XSEDE machines are far larger (at least by an order of magnitude) than what most universities offer. Transitioning from a campus resource to a far larger XSEDE resource is not always trivial. XSEDE has taken many steps to make this easier, including the Campus Bridging initiative, the Campus Champions program, Extended Collaborative Support (ECS) program and through education and outreach. 
+  An increasing number of researchers' computational demands have outgrown the capacity of desktop
+  workstations and are turning to supercomputers to run their simulations and calculations. But many of
+  today's computational problems require larger resource commitments than what individual universities can
+  provide. XSEDE is one of the first places researchers turn to when they outgrow their campus
+  resources. XSEDE machines are far larger (at least by an order of magnitude) than what most universities
+  offer. Transitioning from a campus resource to a far larger XSEDE resource is seldom a trivial task. XSEDE has
+  taken many steps to make this easier, including the Campus Bridging initiative, the Campus Champions
+  program, Extended Collaborative Support Service (ECSS) program, and through education and outreach.
 
-In this paper, we dissect a computationally intensive biology project and share our insights that can help strengthen the programs mentioned above. We are a team of biologists and application support analysts (including a Campus Champion). We worked on a project to calculate population mutation and recombination rates of tens of genome profiles using the mlRho code. mlRho is a serial, open-source, genome analysis code. We estimated that we need 6.3 million SUs. Two of the most important places where the biologists needed help in transitioning to XSEDE are (i) preparing the proposal for 6.3 million SUs on XSEDE, (ii) scaling up the existing workflow to hundreds of cores and (iii) performance optimization. The Campus Bridging initiative makes all of these tasks easier by providing tools and a consistent software stack across centers.
+  In this paper, we dissect a computationally intensive biology project and share the insights we have gained
+  to help strengthen the programs mentioned above. Our team consists of biologists and application support
+  analysts (including a Campus Champion). We worked on a project to calculate population mutation and
+  recombination rates of tens of genome profiles using the mlRho code. The mlRho software is a serial,
+  open-source, genome analysis code. For the initial investigation proposed we estimated that we would need
+  6.3 million SUs on the Ranger system. Three of the most important places where the biologists needed help in
+  transitioning to XSEDE were (i) preparing the proposal for 6.3 million SUs on XSEDE, (ii) scaling up the
+  existing workflow to hundreds of cores and (iii) performance optimization. The Campus Bridging initiative
+  makes all of these tasks easier by providing tools and a consistent software stack across centers.
 
-Ideally, campus champions are can provide support on (i), (ii) and (iii), while ECS staff can do (ii) and (iii). But (i), (ii) and (iii) are often not part of a campus champion's regular job description. To someone writing an XSEDE proposal for the first time, a link to the guidelines and a few pointers may not always be enough for a successful application. We believe that there is a role for a {\bf CAMPUS BRIDGIST} to play in filling the gaps that existing programs leave. While Campus Champions and ECS personnel are perfectly positioned to fill these gaps, we want to bring this to the policy makers' attention.
+  Ideally, campus champions are able to provide support on (i), (ii) and (iii), while ECSS staff can assist
+  with (ii) and (iii). But (i), (ii) and (iii) are often not part of a campus champion's regular job
+  description. To someone writing an XSEDE proposal for the first time, a link to the guidelines and a few
+  pointers may not always be enough for a successful application. In this paper we describe a new role for a
+  {\bf CAMPUS BRIDGIST} to play in bridging the gaps between existing programs and present mlRho as an ideal
+  example case.
 \end{abstract}
 
 % A category with the (minimum) three required fields
@@ -279,20 +299,20 @@ researchers in the field of population genomics use some of the largest XSEDE re
 program at a magnitude that was unprecedented.
 
 Researchers in the Indiana University (IU) Department of Biology have been conducting studies into population
-genomics and evolution for some time. A newly developed software program called \texttt{mlRho} \cite{MEC:MEC4482}, is
+genomics and evolution for some time. A newly developed software program called mlRho \cite{MEC:MEC4482}, is
 being used to study ecological and genetic parameters in different populations. This incarnation of the
-\texttt{mlRho} software is a serial code. However, the investigation we have conducted with our XSEDE allocation was
+mlRho software is a serial code. However, the investigation we have conducted with our XSEDE allocation was
 embarrassingly parallel in nature, so the work for each species was able to be divided among many
 computational processes. To manage hundreds of processes for each of the 40+ species of interest, we used the
 BigJob pilot-job tool, which is currently available on many XSEDE resources. BigJob allowed us to distribute
 the analyses for each species across hundreds to a few thousand processor cores depending on the genome sizes
 of species. Thus far we have conducted ML recombination rate studies on a total of {\bf XX} individual
 genomes. In addition to the use of the BigJob pilot tool we have done extensive performance analysis of the
-\texttt{mlRho} code and, with biologist and computer scientists working in conjunction, have been able to improve the
+mlRho code and, with biologist and computer scientists working in conjunction, have been able to improve the
 runtime of the code by a factor of {\bf XX}.
 
 The remainder of the paper is organized as follows: section \ref{sec:background} gives some insight into the
-computational methodologies and principles of biology being explored by the \texttt{mlRho} code. Section
+computational methodologies and principles of biology being explored by the mlRho code. Section
 \ref{sec:resources} outlines our initial estimates for the computational resources necessary to accomplish our
 research agenda and the steps that were taken to secure an XSEDE allocation. In section \ref{sec:optimization}
 we describe how through tracing and profiling of the code we were able to successfully optimize it and
@@ -305,33 +325,32 @@ Understanding how the amazing biodiversity on our planet has arisen is a biologi
 fascinated humans for thousands of years. It is critical to investigate the fundamental ecological and genetic
 parameters (e.g., population sizes, recombination rates) to disentangle the evolutionary process of the
 existing organisms. The ecological and genetic parameters play important roles in creating opportunities for
-increasing genetic diversity, population divergence, and speciation. Deploying \texttt{mlRho}, a software package which
+increasing genetic diversity, population divergence, and speciation. Deploying mlRho, a software package which
 generates a novel measure of linkage disequilibrium, on XSEDE resources has allowed us to study these
 important population-genetic parameters in a broad assembly of eukaryotic species. This approach has been
 particularly fruitful when applied to the newly available genome sequences now being produced by
 next-generation sequencing methods.
 
 Although there are several methods for determining recombination rates, they can be both time and resource
-intensive. The \texttt{mlRho} software employs a novel analytic approach that uses a new metric called the zygosity
+intensive. The mlRho software employs a novel analytic approach that uses a new metric called the zygosity
 correlation coefficient, which is estimated using maximum likelihood (ML). This approach requires single individual
-samples, but is extremely data intensive. Using the ML approach implemented in the \texttt{mlRho} software developed at
+samples, but is extremely data intensive. Using the ML approach implemented in the mlRho software developed at
 IU, and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of
 species with accuracy that was previously unachievable.
 
 \subsection{Program Description}
-\abhi{say something about the serial nature of the code}
-The \texttt{mlRho} software estimates mutation, recombination, and sequencing error rates from genome
-sequences~\cite{MEC:MEC4482}. The underlying data consists of assembled sequencing reads obtained from a
-single diploid individual. Such data are collected, for example, for the 1000 human genome project. At each
-sequenced position \texttt{mlRho} reads the number of \ty{A}s, \ty{C}s, \ty{G}s, and \ty{T}s from a file. This
-produces a ``profile''. Given a mutation and error rate, \texttt{mlRho} computes two probabilities for each
-profile: The probabilities of observing the profile given that the position is either mutated (heterozygous),
-or not (homozygous). These probabilities depend on the mutation and error rates. By varying them,
-\texttt{mlRho} finds the values that maximize the overall likelihood of the data.
+The mlRho software is a serial program that estimates mutation, recombination, and sequencing error rates from
+genome sequences~\cite{MEC:MEC4482}. The underlying data consists of assembled sequencing reads obtained from
+a single diploid individual. Such data are collected, for example, for the 1000 human genome project. At each
+sequenced position mlRho reads the number of \ty{A}s, \ty{C}s, \ty{G}s, and \ty{T}s from a file. This produces
+a ``profile''. Given a mutation and error rate, mlRho computes two probabilities for each profile: The
+probabilities of observing the profile given that the position is either mutated (heterozygous), or not
+(homozygous). These probabilities depend on the mutation and error rates. By varying them, mlRho finds the
+values that maximize the overall likelihood of the data.
 
 While mutation and sequencing error affect individual genome positions, recombination uncouples the
 evolutionary history of pairs of positions. This is observable as a decorrelation of the zygosity states of
-pairs of positions. To estimate recombination, \texttt{mlRho} computes the probability of observing profile pairs
+pairs of positions. To estimate recombination, mlRho computes the probability of observing profile pairs
 separated by, say, 1000 nucleotides. This is a function of the recombination rate and the single position
 likelihoods.
 
@@ -364,9 +383,18 @@ evolution a species. With the rapid accumulation of whole genome sequences from 
 maximum likelihood (ML) approach that capitalizes on these data has recently been developed by researchers at
 IU to estimate LD and examine genomic recombination patterns \cite{Lynch01112008,MEC:MEC4482}.
 
-The general idea behind this approach is that two allelic chromosomes had a common ancestor some time in the past (just as any two humans share a common ancestor at some point in the past), and at that time, were identical. Since that time, they have become increasingly different, due both to mutations changing their sequence, and to each chromosome recombining with other chromosomes in the population (the larger the population, the more other chromosomes there are to recombine with). If we catalog the similarities and differences between the two alleles, we can learn about this history of mutation and recombination. 
+The general idea behind this approach is that two allelic chromosomes had a common ancestor some time in the
+past (just as any two humans share a common ancestor at some point in the past), and at that time, were
+identical. Since that time, they have become increasingly different, due both to mutations changing their
+sequence, and to each chromosome recombining with other chromosomes in the population (the larger the
+population, the more other chromosomes there are to recombine with). If we catalog the similarities and
+differences between the two alleles, we can learn about this history of mutation and recombination.
 
-The ML approach uses this information to determine the zygosity correlation ($\Delta$) between all the pairs of sites that are separated by various distances (i.e., the probability of two sites being both homozygous or both heterozygous) in a single diploid genome, using the entire set of individual reads. Population genetic theory then links the expected value of delta to conventional measures of LD, such as D and $r^2$, suggesting that $\Delta$ can be used as a valid measure of LD on the population level.
+The ML approach uses this information to determine the zygosity correlation ($\Delta$) between all the pairs
+of sites that are separated by various distances (i.e., the probability of two sites being both homozygous or
+both heterozygous) in a single diploid genome, using the entire set of individual reads. Population genetic
+theory then links the expected value of delta to conventional measures of LD, such as D and $r^2$, suggesting
+that $\Delta$ can be used as a valid measure of LD on the population level.
 
 % {\center \bf Insert equation 11, 14, and 5d from Lynch unpublished.}
 % \begin{eqnarray}
@@ -403,7 +431,7 @@ The ML approach uses this information to determine the zygosity correlation ($\D
 % Thus, when rho is zero, $\Delta$ is approximated by $\theta$; when $\rho$ is infinite, $\Delta$ is approximated by u/r, a parameter that reflects the relative power of mutation versus recombination. These two parameters are critical for evaluating the mutational-hazard hypothesis for genome evolution (Lynch 2007)
 Our simulation results have shown that this ML procedure generates unbiased estimates for theta and
 zygosity-correlation at a range of sequencing coverage (10-20x) \cite{Lynch01112008}.  This ML technique has
-been fully implemented in the software package \texttt{mlRho}. The \texttt{mlRho} software is a highly
+been fully implemented in the software package mlRho. The mlRho software is a highly
 versatile program, able to handle genomes of various sizes, and linkage analyses over hundreds of thousands of
 base pairs. The maximum-likelihood estimates for $\Delta$ and recombination rates are efficiently sought using
 the Nelder and Mead algorithm, as implemented by the GNU scientific library. Nonetheless, this analysis is
@@ -529,10 +557,10 @@ same data file to prevent an excessive number of concurrent processes from readi
 \section{Optimization and Performance Tuning of mlRho}\label{sec:optimization}
 \subsection{Performance Analysis}\label{subsec:analysis}
 %\subsection{Source-code Development and Optimization}
-The \texttt{mlRho} application was originally developed through a collaboration of research labs at IU and the
+The mlRho application was originally developed through a collaboration of research labs at IU and the
 Max Planck Institute for Evolutionary Biology in Germany. Following initial benchmarking and scalability
 testing for an XSEDE allocation proposal, staff members from the Pervasive Technology Institute at IU worked
-together with the \texttt{mlRho} application developers at IU and the Max Planck Institute for Evolutionary
+together with the mlRho application developers at IU and the Max Planck Institute for Evolutionary
 Biology to improve the serial performance of the code. As a result of the investigations by PTI, a new version
 has been recently released, which is vastly more efficient and delivers much more performance when compared to
 the original version. While the work described in the previous sections could be addressed by the {\bf CAMPUS
@@ -593,7 +621,7 @@ Finally, \ty{formatPro} writes a binary file of the contig lengths.
 % 0	434
 % 1	32
 % \end{verbatim}
-The \ty{mlRho} program can then read the profiles from the files produced by \ty{formatPro}.
+The mlRho program can then read the profiles from the files produced by \ty{formatPro}.
 % \begin{lstlisting}
 % /* read first three characters */
 % fread(&tag,sizeof(char),3,fp);
@@ -612,9 +640,9 @@ The profiles are read individually rather than in a single
 step, because we found that this was
 faster. The improvement in data handling introduced with these changes resulted in an overall speedup of the
 serial code of a factor of 2-4X. The next focus was to look at the repeated computation that occurred in the
-\ty{mlRho} program. 
+mlRho program. 
 
-In the 1.10 version of the \ty{mlRho} program, the likelihood computation iterated over all positions. By
+In the 1.10 version of the mlRho program, the likelihood computation iterated over all positions. By
 introducing several improvements in how the likelihoods are calculated, the program now iterates over the much
 smaller number of unique profiles, this improvement can be noticed in figure \ref{fig:stampede-bench} between
 versions 1.21 and 1.23.
@@ -668,7 +696,7 @@ now based entirely on precomputed probabilities.
 % quantities are a function of the rate of recombination. The variable
 % \ty{complementHalf} simply stores $1-(\ty{h0} + \ty{h2})$.
 The combination of better data handling and careful avoidance of repeated computation, lead to an overall 60-fold
-speedup of \ty{mlRho} while maintaining its minimal memory requirement.
+speedup of mlRho while maintaining its minimal memory requirement.
 
 \begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
@@ -695,7 +723,7 @@ speedup of \ty{mlRho} while maintaining its minimal memory requirement.
 %\end{table}
 
 % \subsection{Code Validation}
-% To determine the accuracy of the revamped \ty{mlRho}, we simulated sequencing data with known mutation and
+% To determine the accuracy of the revamped mlRho, we simulated sequencing data with known mutation and
 % recombination rates. Figure~\ref{fig:test}A shows that the mutation rate is accurately estimated even if
 % exceeded by the error rate. Similarly, Figure~\ref{fig:test}B shows that the recombination rate is slightly
 % underestimated if the mutation rate $\theta=10^{-2}$ and $\rho=10^{-2}$ or $\rho=10^{-3}$. However, the
@@ -714,7 +742,7 @@ speedup of \ty{mlRho} while maintaining its minimal memory requirement.
 % \includegraphics{figures/rho}
 % \end{minipage}
 
-% \caption{Testing the accuracy of \ty{mlRho}. \textbf{A}: The mutation
+% \caption{Testing the accuracy of mlRho. \textbf{A}: The mutation
 %   rate estimator, $\hat\theta$, as a function of the sequencing error
 %   rate, $\epsilon$; sequence length: $10^8$. \textbf{B}: The
 %   recombination rate estimator, $\hat\rho$, as a function of pairwise
@@ -738,7 +766,7 @@ enough similarities and documentation on converting submission scripts to make t
 easy. 
  
 The other factor in simplifying  the transition was the use of the BigJob framework coupled with the
-consultation advice from the PTI staff. The initial transition to running \ty{mlrho} in a massively parallel
+consultation advice from the PTI staff. The initial transition to running mlRho in a massively parallel
 way on Ranger was fairly straightforward (mainly due to the embarrassingly parallel nature of the problem),
 and produced excellent throughput. Using BigJob to run thousands of \ty{mlrho} processes was not without
 issues though. Without the aid of the PTI staff to assist in debugging and troubleshooting these issues,
@@ -755,6 +783,7 @@ The initial benchmarking and scaling tests that we did for the allocation propos
   \item We also had problems with some mlRho processes not completing and we had to identify and re-run these jobs. This was a major problem, but both mlRho's and BigJob's version numbers were changing as we used them. This made it difficult to pinpoint the issue. 
 
 \end{itemize}
+
 
 %My experience with running mlRho analysis using Bigjob on Ranger consisted of two different phases in terms of
 %the program performance. When we were developing this idea to use Bigjob to run the analysis in an
@@ -785,7 +814,7 @@ The initial benchmarking and scaling tests that we did for the allocation propos
 %note from Sen
 The analyses we were able to perform on Ranger and Stampede provided an extensive amount of data that would
 have been unimaginable using campus resources. We began our study planning to perform analyses for 100,000
-basepair distances per genome. However, with the optimized version of \ty{mlrho} performing at more than 50
+basepair distances per genome. However, with the optimized version of mlRho performing at more than 50
 times the efficiency of the version we began with, we have now completed 10 times the work we had initially
 planned. For many genomes we have been able to compute up to 1 million basepair distances, and we have been
 able to investigate many more genomes than originally proposed. Results from the new data indicate that the
@@ -802,14 +831,14 @@ insights into the evolution of a large number of organisms.
 \end{figure}
 
 \subsection{Future Work}
-We have begun initial work on deploying the \ty{mlrho} program on the Intel Xeon Phi coprocessor boards
+We have begun initial work on deploying the mlRho program on the Intel Xeon Phi coprocessor boards
 available on Stampede. Since the Phi runs an embedded Linux Operating System \cite{xeon_phi}
-it is relatively easy to launch multiple copies of the \ty{mlrho} binary on the Phi board, assuming
+it is relatively easy to launch multiple copies of the mlRho binary on the Phi board, assuming
 that the input data set can fit in the memory footprint of the Phi board. In our case we copied input data
 sets to the Phi RAM disk and computed against this copy. Figure \ref{fig:mic-scaling} compares the performance
 of a single Phi board on the {\it F. cylindrus} genome with the scaling measurements presented in figure
 \ref{fig:stampede-bench}. Here we compare to the scaling numbers for the Stampede timings using version 2.1 of
-the \ty{mlrho} software. By using a relatively large number of processes, in this case 488, on the Phi board
+the mlRho software. By using a relatively large number of processes, in this case 488, on the Phi board
 we have been able to achieve throughput that is roughly equal to the throughput of the CPUs on two Stampede
 nodes. We are currently focusing our efforts on integrating the Phi scripts into the BigJob framework and
 adding the Phi workload to the CPU workload. Writing a script for the BigJob framework is fairly
@@ -818,7 +847,7 @@ input data access patterns (i.e. the input I/O) is very different for the CPUs a
 
 \section{Conclusions}\label{sec:conclusion}
 
-In all, the project of transitioning and scaling up \ty{mlRho} workloads from campus computational resources
+In all, the project of transitioning and scaling up mlRho workloads from campus computational resources
 to XSEDE resources has been very successful, not only from the perspective of accelerating scientific
 discovery, but also from the perspective of providing a very real and useful example of the value of a {\bf
   CAMPUS BRIDGIST}. Through this project we have shown that a relatively small investment of effort by people
@@ -826,7 +855,7 @@ with the right mix of skills can make a big difference in how challenging it is 
 resources to XSEDE resources. We propose that XSEDE consider including the {\bf CAMPUS BRIDGIST} role in more
 of its supported projects, particularly those projects with PIs who are relatively new to high performance
 computing concepts like batch scheduling, application scalability, and high performance file systems. As the
-\ty{mlrho} software continues to be improved and applied to more data sets, we hope to continue the excellent
+mlRho software continues to be improved and applied to more data sets, we hope to continue the excellent
 synergistic relationship between domain scientists, computer scientists, and cyberinfrastructure
 professionals.
 
