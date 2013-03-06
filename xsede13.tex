@@ -462,7 +462,7 @@ BigJob allows the user to maintain a list of processors allocated after the job 
 Organism Type		& Size of profile& \multicolumn{2}{|c|}{Distanc/sec}  \\ \hline
 	&   & V 1.10 & V 2.1 \\ \hline
 {\it F. cylindrus}  & 0.72 GB & 0.0034 & 0.323 \\ \hline
-{\it P. ornithorhynchus}  & 11 GB &$2.3{\times}10{-4}$ & 0.020 \\ \hline
+{\it P. ornithorhynchus}  & 11 GB &$2.3{\times}10^{-4}$ & 0.020 \\ \hline
 {\it C. familiaris}  & 31 GB & $8.1{\times}10^{-5}$ & 0.005 \\
 \hline
 %Intel & 405 & 388 & 364 & 346\\
@@ -721,17 +721,55 @@ speedup of \ty{mlRho} while maintaining its minimal memory requirement.
 \subsection{User Experience}
 Overall the end user experience of migrating from the relatively modest Quarry and Mason local clusters to the
 much larger Ranger resource on XSEDE was a very smooth transition. This was mostly due to two factors the
-first of which was the similar computational environment on campus and XSEDE resources.. All the data files were easily transferred by standard means. The necessary modules and libraries are all available on Ranger and Stampede.
+first of which was the similar computational environment on campus and XSEDE resources. We were able to
+transfer all of the input data files from campus resources to XSEDE resources relatively painlessly via the
+XSEDE network using standard transfer mechanisms like \ty{scp}. Since both the campus resources and Ranger and
+Stampede at TACC use a variant of the modules software environment management system, replicating the software
+environment on XSEDE resources was a simple matter of finding and loading the correct modules. Although the
+scheduling systems used on the campus resources and XSEDE resources were different (TORQUE vs. SGE) there were
+enough similarities and documentation on converting submission scripts to make the transition relatively
+easy. 
  
-My experience with running mlRho analysis using Bigjob on Ranger consisted of two different phases in terms of the program performance. When we were developing this idea to use Bigjob to run the analysis in an embrassingly parallel way (prior to July 2012), the performance of Bigjob was excellent. All the multicore jobs were completed nicely. However, after the approval of our allocation in September 2012, Bigjob had been upgraded. There seems a number of issues with Bigjob. First of all, the way Bigjob is run involves using the command nohup. As all the jobs are submitted on the login node of Ranger, it is required that no more than 4 nohup commands can be run at one time. It occurred a couple times that I submitted more than 4 bigjobs on the login node and my jobs were all suspended. Subsequently, I was banned from running the jobs. Unfortunately, I was not notified until I found all my jobs were not running for two to three days. This seems to me rather counter productive. For my project, I need to submit ~100 multicore jobs (requiring on average 1024-4096 cores) in total. I would like to have the capacity to submit a number of jobs in the queue and collect data when the jobs are done. Assuming each job is done right, submitting four jobs at a time is not problematic. What is truly problematic is that I encountered a situation that many cores (up to 60\% of the cores) in the same job cannot finish the analysis properly, resulting many missing values. Finding out the missing values and creating new jobs will not necessarily solve the problem, because I often had cores not working properly in these new jobs.
- 
-The queuing time on Ranger was largely determined by how many jobs each user have used in the recent past. For a heavy user in the last one or two days, the queuing time might be 1-2 days for new jobs. The Stampede is excellent in terms of queuing time. At this moment, any job gets started almost immediately.
+The other factor in simplifying  the transition was the use of the BigJob framework coupled with the
+consultation advice from the PTI staff. The initial transition to running \ty{mlrho} in a massively parallel
+way on Ranger was fairly straightforward (mainly due to the embarrassingly parallel nature of the problem),
+and produced excellent throughput. Using BigJob to run thousands of \ty{mlrho} processes was not without
+issues though. \abhi{rewrite some of Sen's problems in the following paragraph with the actual issues and how
+  we resolved them}. Without the aid of the PTI staff to assist in debugging and troubleshooting these issues,
+working effectively on Ranger and Stampede would have been extremely challenging.
+
+%My experience with running mlRho analysis using Bigjob on Ranger consisted of two different phases in terms of
+%the program performance. When we were developing this idea to use Bigjob to run the analysis in an
+%embrassingly parallel way (prior to July 2012), the performance of Bigjob was excellent. All the multicore
+%jobs were completed nicely. However, after the approval of our allocation in September 2012, Bigjob had been
+upgraded. There seems a number of issues with Bigjob. First of all, the way Bigjob is run involves using the
+command nohup. As all the jobs are submitted on the login node of Ranger, it is required that no more than 4
+nohup commands can be run at one time. It occurred a couple times that I submitted more than 4 bigjobs on the
+login node and my jobs were all suspended. Subsequently, I was banned from running the jobs. Unfortunately, I
+was not notified until I found all my jobs were not running for two to three days. This seems to me rather
+counter productive. For my project, I need to submit ~100 multicore jobs (requiring on average 1024-4096
+cores) in total. I would like to have the capacity to submit a number of jobs in the queue and collect data
+when the jobs are done. Assuming each job is done right, submitting four jobs at a time is not
+problematic. What is truly problematic is that I encountered a situation that many cores (up to 60\% of the
+cores) in the same job cannot finish the analysis properly, resulting many missing values. Finding out the
+missing values and creating new jobs will not necessarily solve the problem, because I often had cores not
+working properly in these new jobs.  The queuing time on Ranger was largely determined by how many jobs each
+user have used in the recent past. For a heavy user in the last one or two days, the queuing time might be 1-2
+days for new jobs. The Stampede is excellent in terms of queuing time. At this moment, any job gets started
+almost immediately.
 
 \subsection{Preliminary Science Results}
 %note from Sen
-The speeding up of mlRho program greatly enabled the expansion of this project. Instead of performing analysis to 100 kilo basepairs, we now can carry analyses up to 1 million basepairs.
-In fact, the originally proposed work load has been completed. We basically did 10 times more than what we
-planed to do.
+The analyses we were able to perform on Ranger and Stampede provided an extensive amount of data that would
+have been unimaginable using campus resources. We began our study planning to perform analyses for 100,000
+basepair distances per genome. However, with the optimized version of \ty{mlrho} performing at more than 50
+times the efficiency of the version we began with, we have now completed 10 times the work we had initially
+planned. For many genomes we have been able to compute up to 1 million baspair distances, and we have been
+able to investigate many more genomes than originally proposed. Results from the new data indicate that the
+zygosity correlation at large distances deviates significantly from theoretical expectation. This finding has
+prompted us to begin new simulation and theoretical work to explain the observed discrepancy between the
+theoretical prediction and our ML measurements on actual data. We believe that these new data will provide new
+insights into the evolution of a large number of organisms.
 
 \begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
@@ -741,7 +779,8 @@ planed to do.
 \end{figure}
 
 \subsection{Future Work}
-
+We have begun initial work on deploying the \ty{mlrho} program on the Intel Xeon Phi coprocessor boards
+available on Stampede.
 
 
 \section{Conclusions}\label{sec:conclusion}
