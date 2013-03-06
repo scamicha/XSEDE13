@@ -424,7 +424,7 @@ When we first came up with a research plan, we calculated that we need 12 millio
 \begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
 \includegraphics[width=0.48\textwidth]{figures/cores-nodes.png}
-\caption{The graph shows the huge change in the size of the machines that the users experience when they move to XSEDE. Mason and Quarry are IU resources, where as Ranger, Stampede and Kraken are XSEDE resources. \abhi{I was thinking about including BR/BR 2}}
+\caption{The graph shows the huge change in the size of the machines that the users experience when they move to XSEDE. Mason and Quarry are IU resources, where as Ranger, Stampede and Kraken are XSEDE resources. }
 \label{fig:scaling}
 \end{figure}
 
@@ -465,7 +465,7 @@ We took three different organisms based on the size of their genome. We selected
 %Table~\ref{table:bj_runs} shows the distance traveled by each instance in 24 hours for different genomes. This also shows that the distance traveled is a function of the size of the genome data file. As the reader can observe, distance traveled is directly proportional to the size of the genome data file. We were able to estimate the SUs required per distance per GB of genome data file using each of the three genomes -- all three estimates are nearly identical. Based on these results, we are confident that we can scale up to more than 1000 concurrent instances per genome using BigJob.
 \begin{figure*} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
-\includegraphics[width=0.78\textwidth]{figures/bj-scaling.pdf}
+\includegraphics[width=0.78\textwidth]{figures/bj-scaling.png}
 \caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases nearly linearly with the number instances of mlRho. The Y-Axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The X-Axis shows the number of concurrent mlRho processes running. }
 \label{fig:stampede-bench}
 \end{figure*}
@@ -481,24 +481,24 @@ We took three different organisms based on the size of their genome. We selected
 %  \label{fig:bj-scaling}\caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases linearly with the number instances of mlRho. The Y-Axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The X-Axis shows the number of concurrent mlRho processes running. }
 %\end{figure*}
 
-%\begin{table*}
-%\centering
-%\begin{tabular}{|p{2.8cm}|     c| p{1.5cm} |c  |  c | 	  l  | l  | l  | l  |  } \hline
-%Organism Type		& Size of profile in GB & \multicolumn{2}{|c|}{Distance travelled /min} &\multicolumn{2}{|c|}{SUs/distance}  \\ \hline
-%	&   & V 1.10 & V 2.1 & V 1.10 & V 2.1  \\ \hline
-%{\it F. cylindrus}  & 0.72 & 508 & 19.42 & 394 & new  \\ \hline
-%{\it P. ornithorhynchus}  & 11 & 508 & 414 & 394 & new  \\ \hline
-%{\it C. familiaris}  & 31 & 31 & 414 & 394 & new  \\
+\begin{table*}
+\centering
+\begin{tabular}{|p{2.8cm}|     c| p{1.5cm} |c  |  c | 	  l  | l  | l  | l  |  } \hline
+Organism Type		& Size of profile in GB & \multicolumn{2}{|c|}{Distance travelled /min} &\multicolumn{2}{|c|}{SUs/distance}  \\ \hline
+	&   & V 1.10 & V 2.1 & V 1.10 & V 2.1  \\ \hline
+{\it F. cylindrus}  & 0.72 & 508 & 19.42 & 394 & new  \\ \hline
+{\it P. ornithorhynchus}  & 11 & 508 & 414 & 394 & new  \\ \hline
+{\it C. familiaris}  & 31 & 31 & 414 & 394 & new  \\
+\hline
+%Intel & 405 & 388 & 364 & 346\\
 %\hline
-%%Intel & 405 & 388 & 364 & 346\\
-%%\hline
-%%PGI &418 & N/A   & N/A &N/A\\
-%%\hline
-%
-%\end{tabular}
-%\caption{The table shoes mlRho runtimes on different machines with different compilers. The runtimes are in seconds. Compiling with the Intel compiler gave us a 10\% speedup compared to GNU/PGI compilers on Mason and Ranger. Future work could include building GSL with Intel compilers.   } 
-%\label{table:cache_comp}
-%\end{table*}
+%PGI &418 & N/A   & N/A &N/A\\
+%\hline
+
+\end{tabular}
+\caption{The table shoes mlRho runtimes on different machines with different compilers. The runtimes are in seconds. Compiling with the Intel compiler gave us a 10\% speedup compared to GNU/PGI compilers on Mason and Ranger. Future work could include building GSL with Intel compilers.   } 
+\label{table:cache_comp}
+\end{table*}
 
 \subsection{XSEDE Allocation}
 %\abhi{notes: startup alloc help -- CBridgers's help needed, scalability tests, etc}
