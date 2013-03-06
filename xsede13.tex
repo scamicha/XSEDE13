@@ -466,7 +466,7 @@ We took three different organisms based on the size of their genome. We selected
 \begin{figure*} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
 \includegraphics[width=0.78\textwidth]{figures/bj-scaling.png}
-\caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases nearly linearly with the number instances of mlRho. The Y-Axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The X-Axis shows the number of concurrent mlRho processes running. }
+\caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases nearly linearly with the number instances of mlRho. The y-axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The x-axis shows the number of concurrent mlRho processes running. }
 \label{fig:stampede-bench}
 \end{figure*}
 
@@ -483,12 +483,12 @@ We took three different organisms based on the size of their genome. We selected
 
 \begin{table*}
 \centering
-\begin{tabular}{|p{2.8cm}|     c| p{1.5cm} |c  |  c | 	  l  | l  | l  | l  |  } \hline
-Organism Type		& Size of profile in GB & \multicolumn{2}{|c|}{Distance travelled /min} &\multicolumn{2}{|c|}{SUs/distance}  \\ \hline
-	&   & V 1.10 & V 2.1 & V 1.10 & V 2.1  \\ \hline
-{\it F. cylindrus}  & 0.72 & 508 & 19.42 & 394 & new  \\ \hline
-{\it P. ornithorhynchus}  & 11 & 508 & 414 & 394 & new  \\ \hline
-{\it C. familiaris}  & 31 & 31 & 414 & 394 & new  \\
+\begin{tabular}{|c|  c   | p{1.3cm} |c  |     } \hline
+Organism Type		& Size of profile in GB & \multicolumn{2}{|c|}{Distance travelled /sec}  \\ \hline
+	&   & V 1.10 & V 2.1 \\ \hline
+{\it F. cylindrus}  & 0.72 & 0.0034 & 0.323 \\ \hline
+{\it P. ornithorhynchus}  & 11 & 0.00023 & 0.020 \\ \hline
+{\it C. familiaris}  & 31 & 0.0000810 & 0.005 \\
 \hline
 %Intel & 405 & 388 & 364 & 346\\
 %\hline
@@ -496,7 +496,7 @@ Organism Type		& Size of profile in GB & \multicolumn{2}{|c|}{Distance travelled
 %\hline
 
 \end{tabular}
-\caption{The table shoes mlRho runtimes on different machines with different compilers. The runtimes are in seconds. Compiling with the Intel compiler gave us a 10\% speedup compared to GNU/PGI compilers on Mason and Ranger. Future work could include building GSL with Intel compilers.   } 
+\caption{The table lists three organisms which were chosen to represent profiles of different size. The second column shows the size of the profile in gigabytes. The third column shows the distance travelled per second by V1.10 and V2.1 on one core on Ranger and Stampede, respectively. The rate of distance is a function of the size of the genome.  } 
 \label{table:cache_comp}
 \end{table*}
 
@@ -668,9 +668,19 @@ speedup of \ty{mlRho} while maintaining its minimal memory requirement.
 \begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
 \includegraphics[width=0.48\textwidth]{figures/mlrho-benchmarks.png}
-\caption{The graph show the different versions of mlRho benchmarked on a single core on Stampede. The Y-Axis shows the time steps per hour in logarithmic scale. Compared to version 1.10,  2.1 is nearly 50 times faster. }
+\caption{The graph shows the different versions of mlRho benchmarked on a single core on Stampede. The y-axis shows the time steps per hour in logarithmic scale. Compared to version 1.10,  2.1 is nearly 50 times faster. }
 \label{fig:stampede-bench}
 \end{figure}
+
+
+\begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
+\centering
+\includegraphics[width=0.48\textwidth]{figures/mic-scaling.pdf}
+\caption{The graph compares the performance scaling behavior of mlRho on CPUs and MICs. Each mlRho process on a CPU was run on an individual core while multiple instances of mlRho were run on a single MIC. 488 mlRho instances on a single MIC gave us the same throughput as running 32 instances on 2 nodes of Stampede.  }
+\label{fig:mic-scaling}
+\end{figure}
+
+
 
 %\begin{table}
 %\centering
