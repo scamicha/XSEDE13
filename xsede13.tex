@@ -527,8 +527,8 @@ machines.
 
 \begin{table}
 \centering
-\begin{tabular}{|c|c| p{1.3cm} |c  |     } \hline
-Organism Type		& Size of profile& \multicolumn{2}{|c|}{Distanc/sec}  \\ \hline
+\begin{tabular}{|c|c| c |c  |     } \hline
+Organism Type		& Size of profile& \multicolumn{2}{|c|}{Distance/sec}  \\ \hline
 	&   & V 1.10 & V 2.1 \\ \hline
 {\it F. cylindrus}  & 0.72 GB & 0.0034 & 0.323 \\ \hline
 {\it P. ornithorhynchus}  & 11 GB &$2.3{\times}10{-4}$ & 0.020 \\ \hline
@@ -564,7 +564,7 @@ Ranger with the improved version of mlRho as it was in the process decommissioni
 \centering
 \includegraphics[width=0.78\textwidth]{figures/bj-scaling.png}
 \caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases nearly linearly with the number instances of mlRho. The y-axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The x-axis shows the number of concurrent mlRho processes running. }
-\label{fig:stampede-bench}
+\label{fig:bj-scaling}
 \end{figure*}
 
 %\begin{figure*}[htp]
@@ -833,30 +833,47 @@ easy.
 The other factor in simplifying  the transition was the use of the BigJob framework coupled with the
 consultation advice from the PTI staff. The initial transition to running mlRho in a massively parallel
 way on Ranger was fairly straightforward (mainly due to the embarrassingly parallel nature of the problem),
-and produced excellent throughput. Using BigJob to run thousands of mlRho processes was not without
-issues though. \abhi{rewrite some of Sen's problems in the following paragraph with the actual issues and how
-  we resolved them}. Without the aid of the PTI staff to assist in debugging and troubleshooting these issues,
-working effectively on Ranger and Stampede would have been extremely challenging.
+and produced excellent throughput. Using BigJob to run thousands of \ty{mlrho} processes was not without
+issues though. Without the aid of the PTI staff to assist in debugging and troubleshooting these issues,
+working effectively on Ranger and Stampede would have been extremely challenging. 
+%\abhi{rewrite some of Sen's problems in the following paragraph with the actual issues and how  we resolved them}.
+\subsubsection{Technical Issues }
+
+The initial benchmarking and scaling tests that we did for the allocation proposal progressed smoothly. But as with any research project, we ran into many technical challenges when we started running experiments at scale on Ranger. Some were due to scaling issues, there were problems with BigJob design/usage, filesystem issues and some of these led to the user getting banned from the system. Some of the major issues are listed below. 
+\begin{itemize}
+  \item We are always on the look out for issues related to the filesystem, given that hundreds of mlRho processes read from a single input file. We tried to address this problem by striping the directories containing the input files. TACC administrators advised us that this addressed the problem. We gradually scaled-up our job size to 4000 cores on Ranger but this put excessive stress on the lustre filesystem. We then decided to stay below 2000 cores to avoid this issue. Another solution to this problem is to have a different input file for every group of 500 mlRho processes. 
+
+  \item The BigJob tool is and has been under active development. There were major design changes happening during the time that we started using it on Ranger. BigJob addresses a range of compute and data problems and multiple example scripts are available on its website. The version we were provided was not suitable for our task, which is bundling and running hundreds of serial jobs. It took us a couple of weeks to find and rectify this problem. 
+  \item The BigJob master process needs to be active from the time the job is submitted to the queue till the end of the run. This means that BigJob will need to be active on the login node of Ranger and not lose connection. The other solution is to run BigJob in a screen session or use other tools like nohup on the login node. We have been warned by TACC administrators about misusing the login node. In the end we were told not to run more than 4 interactive sessions at a time, which is less than optimal but reasonable. 
+  \item We also had problems with some mlRho processes not completing and we had to identify and re-run these jobs. This was a major problem, but both mlRho's and BigJob's version numbers were changing as we used them. This made it difficult to pinpoint the issue. 
+
+\end{itemize}
+
 
 %My experience with running mlRho analysis using Bigjob on Ranger consisted of two different phases in terms of
 %the program performance. When we were developing this idea to use Bigjob to run the analysis in an
 %embrassingly parallel way (prior to July 2012), the performance of Bigjob was excellent. All the multicore
 %jobs were completed nicely. However, after the approval of our allocation in September 2012, Bigjob had been
-upgraded. There seems a number of issues with Bigjob. First of all, the way Bigjob is run involves using the
-command nohup. As all the jobs are submitted on the login node of Ranger, it is required that no more than 4
-nohup commands can be run at one time. It occurred a couple times that I submitted more than 4 bigjobs on the
-login node and my jobs were all suspended. Subsequently, I was banned from running the jobs. Unfortunately, I
-was not notified until I found all my jobs were not running for two to three days. This seems to me rather
-counter productive. For my project, I need to submit ~100 multicore jobs (requiring on average 1024-4096
-cores) in total. I would like to have the capacity to submit a number of jobs in the queue and collect data
-when the jobs are done. Assuming each job is done right, submitting four jobs at a time is not
-problematic. What is truly problematic is that I encountered a situation that many cores (up to 60\% of the
-cores) in the same job cannot finish the analysis properly, resulting many missing values. Finding out the
-missing values and creating new jobs will not necessarily solve the problem, because I often had cores not
-working properly in these new jobs.  The queuing time on Ranger was largely determined by how many jobs each
-user have used in the recent past. For a heavy user in the last one or two days, the queuing time might be 1-2
-days for new jobs. The Stampede is excellent in terms of queuing time. At this moment, any job gets started
-almost immediately.
+%upgraded. There seems a number of issues with Bigjob. 
+
+%First of all, the way Bigjob is run involves using the
+%command nohup. As all the jobs are submitted on the login node of Ranger, it is required that no more than 4
+%nohup commands can be run at one time. 
+
+%It occurred a couple times that I submitted more than 4 bigjobs on the
+%login node and my jobs were all suspended. Subsequently, I was banned from running the jobs. Unfortunately, I
+%was not notified until I found all my jobs were not running for two to three days. This seems to me rather
+%counter productive. 
+
+%For my project, I need to submit ~100 multicore jobs (requiring on average 1024-4096
+%cores) in total. I would like to have the capacity to submit a number of jobs in the queue and collect data
+%when the jobs are done. 
+
+%Assuming each job is done right, submitting four jobs at a time is not
+%problematic. What is truly problematic is that I encountered a situation that many cores (up to 60\% of the
+%cores) in the same job cannot finish the analysis properly, resulting many missing values. Finding out the
+%missing values and creating new jobs will not necessarily solve the problem, because I often had cores not
+%working properly in these new jobs.  
 
 \subsection{Preliminary Science Results}
 %note from Sen
@@ -864,7 +881,7 @@ The analyses we were able to perform on Ranger and Stampede provided an extensiv
 have been unimaginable using campus resources. We began our study planning to perform analyses for 100,000
 basepair distances per genome. However, with the optimized version of mlRho performing at more than 50
 times the efficiency of the version we began with, we have now completed 10 times the work we had initially
-planned. For many genomes we have been able to compute up to 1 million baspair distances, and we have been
+planned. For many genomes we have been able to compute up to 1 million basepair distances, and we have been
 able to investigate many more genomes than originally proposed. Results from the new data indicate that the
 zygosity correlation at large distances deviates significantly from theoretical expectation. This finding has
 prompted us to begin new simulation and theoretical work to explain the observed discrepancy between the
