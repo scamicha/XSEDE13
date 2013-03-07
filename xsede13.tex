@@ -306,10 +306,10 @@ embarrassingly parallel in nature, so the work for each species was able to be d
 computational processes. To manage hundreds of processes for each of the 40+ species of interest, we used the
 BigJob pilot-job tool, which is currently available on many XSEDE resources. BigJob allowed us to distribute
 the analyses for each species across hundreds to a few thousand processor cores depending on the genome sizes
-of species. Thus far we have conducted ML recombination rate studies on a total of {\bf XX} individual
+of species. Thus far we have conducted ML recombination rate studies on a total of 46 individual
 genomes. In addition to the use of the BigJob pilot tool we have done extensive performance analysis of the
 mlRho code and, with biologist and computer scientists working in conjunction, have been able to improve the
-runtime of the code by a factor of {\bf XX}.
+runtime of the code by a factor of more than 50.
 
 The remainder of the paper is organized as follows: section \ref{sec:background} gives some insight into the
 computational methodologies and principles of biology being explored by the mlRho code. Section
@@ -544,6 +544,13 @@ Organism Type		& Size of profile& \multicolumn{2}{|c|}{Distance/sec}  \\ \hline
 \label{table:cache_comp}
 \end{table}
 
+\begin{figure*}[t] %[h!] % t=top, b=bottom, h=here, p=separate page
+\centering
+\includegraphics[width=0.78\textwidth]{figures/bj-scaling.png}
+\caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases nearly linearly with the number instances of mlRho. The y-axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The x-axis shows the number of concurrent mlRho processes running. }
+\label{fig:bj-scaling}
+\end{figure*}
+
 \subsubsection{mlRho Scalability tests}
 \label{sec:scalability}
 We used the BigJob installation already in place on Ranger. The major focus of our tests was to discover how
@@ -560,12 +567,6 @@ an optimized version of mlRho and obtained similar results. We are unable to rep
 Ranger with the improved version of mlRho as it was in the process decommissioning.
 
 %Table~\ref{table:bj_runs} shows the distance traveled by each instance in 24 hours for different genomes. This also shows that the distance traveled is a function of the size of the genome data file. As the reader can observe, distance traveled is directly proportional to the size of the genome data file. We were able to estimate the SUs required per distance per GB of genome data file using each of the three genomes -- all three estimates are nearly identical. Based on these results, we are confident that we can scale up to more than 1000 concurrent instances per genome using BigJob.
-\begin{figure*}[t] %[h!] % t=top, b=bottom, h=here, p=separate page
-\centering
-\includegraphics[width=0.78\textwidth]{figures/bj-scaling.png}
-\caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases nearly linearly with the number instances of mlRho. The y-axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The x-axis shows the number of concurrent mlRho processes running. }
-\label{fig:bj-scaling}
-\end{figure*}
 
 %\begin{figure*}[htp]
 %  \centering
