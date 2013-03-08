@@ -211,13 +211,11 @@ Robert Henschel\\
 \maketitle
 \begin{abstract}
   An increasing number of researchers' computational demands have outgrown the capacity of desktop
-  workstations and are turning to supercomputers to run their simulations and calculations. But many of
-  today's computational problems require larger resource commitments than what individual universities can
-  provide. XSEDE is one of the first places researchers turn to when they outgrow their campus
-  resources. XSEDE machines are far larger (at least by an order of magnitude) than what most universities
-  offer. Transitioning from a campus resource to a far larger XSEDE resource is seldom a trivial task. XSEDE has
+workstations and are turning to supercomputers to run their simulations and calculations. Many of today's computational problems, however, require larger resource commitments than what individual universities can
+ provide. XSEDE is one of the first places researchers turn to when they outgrow their campus
+resources. XSEDE machines are far larger (by at least an order of magnitude) than what most universities offer. Transitioning from a campus resource to an XSEDE resource is seldom a trivial task. XSEDE has
   taken many steps to make this easier, including the Campus Bridging initiative, the Campus Champions
-  program, Extended Collaborative Support Service (ECSS) program, and through education and outreach.
+program, the Extended Collaborative Support Service (ECSS) program, and through education and outreach.
 
   In this paper, we dissect a computationally intensive biology project and share the insights we have gained
   to help strengthen the programs mentioned above. Our team consists of biologists and application support
@@ -229,8 +227,8 @@ Robert Henschel\\
   existing workflow to hundreds of cores and (iii) performance optimization. The Campus Bridging initiative
   makes all of these tasks easier by providing tools and a consistent software stack across centers.
 
-  Ideally, campus champions are able to provide support on (i), (ii) and (iii), while ECSS staff can assist
-  with (ii) and (iii). But (i), (ii) and (iii) are often not part of a campus champion's regular job
+  Ideally, Campus Champions are able to provide support on (i), (ii) and (iii), while ECSS staff can assist
+  with (ii) and (iii). But (i), (ii) and (iii) are often not part of a Campus Champion's regular job
   description. To someone writing an XSEDE proposal for the first time, a link to the guidelines and a few
   pointers may not always be enough for a successful application. In this paper we describe a new role for a
   {\bf CAMPUS BRIDGIST} to play in bridging the gaps between existing programs and present mlRho as an ideal
@@ -247,8 +245,7 @@ Robert Henschel\\
 \keywords{high-throughput, XSEDE, BigJob, pilot-job, genetics}
 
 \section{Introduction}
-As first defined by the National Science Foundation Advisory Committee for Cyberinfrastructure's task force on
-campus bridging \cite{nsf2011}, and later expanded upon by \citeauthor{stewart2012}, campus bridging is:
+As first defined by the National Science Foundation Advisory Committee for Cyberinfrastructure's Task Force on Campus Bridging \cite{nsf2011}, and later expanded upon by \citeauthor{stewart2012}, campus bridging is:
 
 \begin{quotation}
 ``...the seamlessly integrated use of cyberinfrastructure operated by a scientist or engineer
@@ -259,7 +256,7 @@ the VO. \cite{stewart2012}''
 \end{quotation}
 
 In applying this definition of campus bridging to XSEDE, one of the biggest challenges for researchers moving
-from campus resources to XSEDE resources is being able to scale-up their workflows so that they are efficient
+from campus resources to XSEDE resources is being able to scale up their workflows so that they are efficient
 and can achieve high throughput on the larger XSEDE machines. While \citeauthor{stewart2012} identify key use
 cases where campus bridging tools can improve a researcher's experience using XSEDE resources, one aspect that
 is not included in their analysis is the dramatic increase in complexity that is inherent in the computational
@@ -273,16 +270,18 @@ Roll by \citeauthor{stewart2012}), but can be compounded by widely divergent sof
 campus and XSEDE resources. Even when the operating environment is not very different on XSEDE resources
 compared to campus resources, researchers can face challenges with the sheer scale and complexity of XSEDE
 resources. In the situation described in this paper, campus bridging amounted to helping the researchers
-redesign their experiments and scale up their workflows to move effectively from their local workstations, to IU's modest
+redesign their experiments and scale up their workflows to move effectively from their local workstations to IU's modest
 sized cluster environment, and then on to use the much larger XSEDE machines at TACC. It should be
 noted that, in general, the differences in software environment between the IU campus resources and the TACC
-supercomputers were superficial, the real challenges lie in dealing with scaling up the application and
+supercomputers were superficial; the real challenges lie in dealing with scaling up the application and
 navigating the complexity of a much larger system.
+
+
 
 In this paper we introduce the new role of {\bf CAMPUS BRIDGIST} to help address the challenges faced by
 researchers when moving from their workstation to XSEDE resources. A {\bf CAMPUS BRIDGIST} is someone who
 helps to bridge the gap between domain science and computer science and helps researchers who want to use
-XSEDE resources move their applications from small scale campus resources to much larger XSEDE resources. The
+XSEDE resources move their applications from small-scale campus resources to much larger XSEDE resources. The
 {\bf CAMPUS BRIDGIST} is mostly a technologist who is able to apply many different approaches to scaling up
 applications, but should also be familiar with the common challenges of the scientific domain and should be
 able to communicate effectively about XSEDE resources with researchers who may have little or no HPC
@@ -292,22 +291,22 @@ the role filled by the Extended Collaborative Support Service (ECSS) team. As th
 information, guidance, and facilitate gaining access to XSEDE resources and the ECSS role which is designed to
 provide in depth analysis, insight and development for a particular scientific or engineering challenge. The
 role of {\bf CAMPUS BRIDGIST} may, in fact, be filled by the same people who are currently Campus Champions or
-ECSS team members, in many ways the functions of the {\bf CAMPUS BRIDGIST} role are an extension of those
+ECSS team members; in many ways the functions of the {\bf CAMPUS BRIDGIST} role are an extension of those
 already existing ECSS and Campus Champion functions. In this paper we discuss how, by filling the role of
 {\bf CAMPUS BRIDGIST}, we were able to bridge the gap between many differently sized resources and to help
 researchers in the field of population genomics use some of the largest XSEDE resources to conduct a research
-program at a magnitude that was unprecedented.
+program at an unprecedented magnitude.
+
 
 Researchers in the Indiana University (IU) Department of Biology have been conducting studies into population
-genomics and evolution for some time. A newly developed software program called mlRho \cite{MEC:MEC4482}, is
+genomics and evolution for some time. A newly developed software program called mlRho \cite{MEC:MEC4482} is
 being used to study ecological and genetic parameters in different populations. This incarnation of the
 mlRho software is a serial code. However, the investigation we have conducted with our XSEDE allocation was
 embarrassingly parallel in nature, so the work for each species was able to be divided among many
 computational processes. To manage hundreds of processes for each of the 40+ species of interest, we used the
 BigJob pilot-job tool, which is currently available on many XSEDE resources. BigJob allowed us to distribute
 the analyses for each species across hundreds to a few thousand processor cores depending on the genome sizes
-of species. Thus far we have conducted ML recombination rate studies on a total of 46 individual
-genomes. In addition to the use of the BigJob pilot tool we have done extensive performance analysis of the
+of species. Thus far we have conducted maximum likelihood (ML) recombination rate studies on a total of 46 individualgenomes. In addition to the use of the BigJob pilot tool we have done extensive performance analysis of the
 mlRho code and, with biologist and computer scientists working in conjunction, have been able to improve the
 runtime of the code by a factor of more than 50.
 
@@ -333,7 +332,7 @@ next-generation sequencing methods.
 
 Although there are several methods for determining recombination rates, they can be both time and resource
 intensive. The mlRho software employs a novel analytic approach that uses a new metric called the zygosity
-correlation coefficient, which is estimated using maximum likelihood (ML). This approach requires single individual
+correlation coefficient, which is estimated using ML. This approach requires single individual
 samples, but is extremely data intensive. Using the ML approach implemented in the mlRho software developed at
 IU, and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of
 species with accuracy that was previously unachievable.
@@ -373,7 +372,7 @@ associated with conventional measures of LD, such as D (a measure of LD) and $r^
 correlation coefficient), is huge. Due to this fact, a large number of loci are needed to obtain a reasonable
 estimate of LD.  Recombination rates can also be investigated by pedigree analyses and crossing experiments,
 but these methods cannot provide information on fine-scale recombination rates and are often difficult to
-perform, even in model organisms, let alone non-model species. Thus, while we know these values for a few
+perform in model organisms, let alone non-model species. Thus, while we know these values for a few
 species, there is very little comparative data to understand how these processes vary across many species.
 
 \subsection{ A Novel Approach to Estimating LD and Recombination Rate}\label{sec:migration}
@@ -444,7 +443,7 @@ have to be calculated for every distance.
 We began with an initial research plan that called for 12 million core hours to complete the project of
 analyzing all of our target genomes without sacrificing any of the objectives. At this point, we were using
 Quarry, a local IU resource, but it was clear that we needed a bigger machine to complete the calculations in
-a reasonable period of time. Quarry is a 2960 core machine, where as XSEDE machines such as Ranger, Stampede,
+a reasonable period of time. Quarry is a 2960 core machine, whereas XSEDE machines such as Ranger, Stampede,
 and Kraken are much larger. Figure \ref{fig:scaling} shows the number of nodes and cores on each machine. The
 software and scheduling environment on Quarry is similar to that of XSEDE machines referred to here. The
 central difference was the size of the machines and therefore the biggest challenge was scaling our workflow
@@ -466,7 +465,7 @@ accordingly. We explain how we made the transition and discuss the tools that we
 \begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
 \includegraphics[width=0.48\textwidth]{figures/cores-nodes.png}
-\caption{The graph shows the huge change in the size of the machines that the users experience when they move to XSEDE. Mason and Quarry are IU resources, where as Ranger, Stampede and Kraken are XSEDE resources. }
+\caption{The graph shows the huge change in the size of the machines that the users experience when they move to XSEDE. Mason and Quarry are IU resources, whereas Ranger, Stampede and Kraken are XSEDE resources. }
 \label{fig:scaling}
 \end{figure}
 
@@ -500,7 +499,7 @@ humans to explore intraspecific differences in linkage patterns and population h
 \label{sec:tests}
 
 For some time the researchers had been running the mlRho code on local IU resources serially, by requesting
-one node at a time. Given that IU resource, Quarry, had a serial queue, which placed multiple serial jobs from
+one node at a time. Given that the IU resource, Quarry, had a serial queue that placed multiple serial jobs from
 a single user on the same node, this was a feasible course. Unfortunately most of the major XSEDE resources do
 not provide such a high throughput queue. The users are charged for the whole node, irrespective of the number
 of cores their job actually utilizes. Moreover, the larger machines are configured for highly parallel jobs and
@@ -513,7 +512,7 @@ problem by providing users with wrappers and other software which bundle many se
 
 We used the SAGA BigJob to bundle our single-core serial mlRho simulations. We have integrated mlRho with
 BigJob and conducted several experiments on Ranger and Stampede which have shown good performance and
-scalability.  BigJob is pilot-job tool available on many XSEDE resources such as Kraken, Ranger and
+scalability.  BigJob is pilot-job tool available on many XSEDE resources such as Kraken, Ranger, and
 Lonestar. Many researchers have successfully used BigJob~\cite{bigjob_web} to bundle hundreds of smaller jobs
 into larger, more manageable groups of jobs~\cite{Luckow:2008fp, async_repex11}.
 
@@ -547,7 +546,7 @@ Organism Type		& Size of profile& \multicolumn{2}{|c|}{Distance/sec}  \\ \hline
 \begin{figure*}[t] %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
 \includegraphics[width=0.78\textwidth]{figures/bj-scaling.png}
-\caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases nearly linearly with the number instances of mlRho. The y-axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The x-axis shows the number of concurrent mlRho processes running. }
+\caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases nearly linearly with the number of instances of mlRho. The y-axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The x-axis shows the number of concurrent mlRho processes running. }
 \label{fig:bj-scaling}
 \end{figure*}
 
@@ -556,15 +555,14 @@ Organism Type		& Size of profile& \multicolumn{2}{|c|}{Distance/sec}  \\ \hline
 We used the BigJob installation already in place on Ranger. The major focus of our tests was to discover how
 mlRho scaled when we increased the number of concurrent mlRho processes. We took three different organisms
 based on the size of their genome: a small genome {\it F. cylindrus}, a medium genome {\it
-  P. ornithorhynchus}, and a large genome {\it C. familiaris}. Data sizes are provided in table
+P. ornithorhynchus}, and a large genome {\it C. familiaris}. Data sizes are provided in Table
 \ref{table:cache_comp}. We ran the mlRho program with each of these genomes starting with 16 concurrent mlRho
 instances reading from the same data file. We let the processes run for 24 hours and measured how many
 distances were computed in aggregate. We repeated this for each of the genomes with 16, 32, 64 and 128
-concurrent instances. The results are shown in figure~\ref{fig:bj-scaling}. Figure~\ref{fig:bj-scaling} shows
-that the distance traveled, irrespective of the genome, size and the number of concurrent instances, increases
+concurrent instances. The results are shown in Figure~\ref{fig:bj-scaling}. Figure~\ref{fig:bj-scaling} shows that the distance traveled, irrespective of the genome, size, and the number of concurrent instances, increases
 nearly linearly with number of concurrent instances being run. We have verified this behavior on Stampede with
 an optimized version of mlRho and obtained similar results. We are unable to repeat this scaling study on
-Ranger with the improved version of mlRho as it was in the process decommissioning.
+Ranger with the improved version of mlRho as Ranger has since been decommissioned.
 
 %Table~\ref{table:bj_runs} shows the distance traveled by each instance in 24 hours for different genomes. This also shows that the distance traveled is a function of the size of the genome data file. As the reader can observe, distance traveled is directly proportional to the size of the genome data file. We were able to estimate the SUs required per distance per GB of genome data file using each of the three genomes -- all three estimates are nearly identical. Based on these results, we are confident that we can scale up to more than 1000 concurrent instances per genome using BigJob.
 
@@ -586,8 +584,9 @@ successful XSEDE proposal is not a trivial task. The computational justification
 be concrete and this is especially true if the request is for more than a few million SUs. XSEDE
 allocation committees are routinely faced with the fact that the machines are oversubscribed by a factor of 2:1.
 
+
 We believe that allocation proposal preparation is one key area where users new to XSEDE need significant
-help. In the case of the mlRho project, research staff from PTI helped biologists to prepare an allocation
+help. In the case of the mlRho project, research staff from the Indiana University Pervasive Technology Institute (PTI) helped biologists to prepare an allocation
 proposal. We started by requesting startup allocations on Ranger and Kraken. We benchmarked mlRho on a single
 core on Ranger and Kraken. We then did a scalability study as described in section \ref{sec:scalability}. It
 is important to accurately estimate and justify the total number of SUs that we request from XSEDE.  We also
@@ -602,13 +601,13 @@ is discussed in section \ref{sec:optimization} in more detail.
 
 We have carefully constructed a detailed plan on how to proceed with our experiments. In section
 \ref{sec:tests}, we showed that the mlRho code can scale to 128 processes, with each process reading from the
-same file with no performance degradation. We estimated that we can feasibly scale-up to $\approx$500
+same file with no performance degradation. We estimated that we can feasibly scale up to $\approx$500
 processes reading from the same data file, without noticeable performance degradation. By making multiple
-copies of the data file, we could scale-up to $\approx$ 5000 processes. Job requests of 5000 processes on
+copies of the data file, we could scale up to $\approx$5000 processes. Job requests of 5000 processes on
 Ranger and Kraken are appropriate and we have not experienced extremely long wait times with past BigJob
 experiments. We proposed that with this design, we could complete our analysis within four to five months from
 the time of the allocation award. This proposed framework was already working on Ranger, and was in the
-process of implementation on Kraken.
+process of being implemented on Kraken.
 
 In our initial testing of the three sample genomes, we worked out a few issues that could have affected
 scalability. One of those issues was data access and file striping. When we had scaled up to 128 cores we
@@ -625,19 +624,19 @@ same time.
 %\subsection{Source-code Development and Optimization}
 The mlRho application was originally developed through a collaboration of research labs at IU and the
 Max Planck Institute for Evolutionary Biology in Germany. Following initial benchmarking and scalability
-testing for an XSEDE allocation proposal, staff members from the Pervasive Technology Institute at IU worked
+testing for an XSEDE allocation proposal, staff members from the IU Pervasive Technology Institute worked
 together with the mlRho application developers at IU and the Max Planck Institute for Evolutionary
 Biology to improve the serial performance of the code. As a result of the investigations by PTI, a new version
-has been recently released, which is vastly more efficient and delivers much more performance when compared to
+has been recently released which is vastly more efficient and delivers much better performance when compared to
 the original version. While the work described in the previous sections could be addressed by the {\bf CAMPUS
   BRIDGIST} role, the analysis and optimization described in this section would most likely be associated with
-the XSEDE ECSS team, in this particular case both roles were fulfilled by a single team member at PTI, however
+the XSEDE ECSS team. In this particular case both roles were fulfilled by a single team member at PTI; however,
 it is certainly possible that these two roles could be filled by different teams at different institutions.
 
 \subsection{Implementation of  Performance Analysis Findings}
 Research staff at PTI began code optimization with \texttt{mlrho} version 1.10. As a first step we compiled
 the code with compilers other than the standard GNU compiler that had been used by \texttt{mlrho}. Both the
-Intel and PGI compilers produced a runtime improvement of $\approx$ 10\% over the GNU compiler on Ranger, this
+Intel and PGI compilers produced a runtime improvement of $\approx$10\% over the GNU compiler on Ranger, this
 is a fairly typical result that the optimization team at PTI has seen in many instances. From this point we
 determined that further improvements would most likely be gained by modifications to the source code. To
 inform the core developers at the IU and Max Planck Institute for Evolutionary Biology research labs as to
@@ -645,10 +644,10 @@ where their efforts would be best spent, we conducted a detailed analysis of \te
 the Vampir toolchain. The analysis led the core developers to focus on two aspects of the code: data handling
 and repeated computation. As to data handling, many profiles occur repeatedly in a data set. To address this
 an additional program, \ty{formatPro}, was written to compress the raw profiles. The \ty{formatPro} program reads profiles either from a text
-file, or from a BAM file, the  standard format for distributing genome alignment files \citep{li09:seq}. 
+file or from a BAM file, the standard format for distributing genome alignment files \citep{li09:seq}. 
 
 By introducing this new method of data storage performance increased by more than a factor of two from version
-1.16 to 1.21 (see figure \ref{fig:stampede-bench}). The \ty{formatPro} program writes a binary table of unique
+1.16 to 1.21 (see Figure \ref{fig:stampede-bench}). The \ty{formatPro} program writes a binary table of unique
 profiles.
 % \begin{lstlisting}
 % /* write tag for recognizing file type */
@@ -710,7 +709,7 @@ mlRho program.
 
 In the 1.10 version of the mlRho program, the likelihood computation iterated over all positions. By
 introducing several improvements in how the likelihoods are calculated, the program now iterates over the much
-smaller number of unique profiles, this improvement can be noticed in figure \ref{fig:stampede-bench} between
+smaller number of unique profiles. This improvement can be noticed in Figure \ref{fig:stampede-bench} between
 versions 1.21 and 1.23.
 % \begin{lstlisting}
 % for(i=0;i<numProfiles;i++){
@@ -761,7 +760,7 @@ now based entirely on precomputed probabilities.
 % \ty{h2} the probability of observing a heterozygous pair. These two
 % quantities are a function of the rate of recombination. The variable
 % \ty{complementHalf} simply stores $1-(\ty{h0} + \ty{h2})$.
-The combination of better data handling and careful avoidance of repeated computation, lead to an overall 60-fold
+The combination of better data handling and careful avoidance of repeated computation led to an overall 60-fold
 speedup of mlRho while maintaining its minimal memory requirement.
 
 \begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
@@ -821,7 +820,7 @@ speedup of mlRho while maintaining its minimal memory requirement.
 \section{User Experience, Preliminary Science Results, and Future Work}\label{sec:results}
 \subsection{User Experience}
 Overall the end user experience of migrating from the relatively modest Quarry and Mason local clusters to the
-much larger Ranger resource on XSEDE was a very smooth transition. This was mostly due to two factors the
+much larger Ranger resource on XSEDE was a very smooth transition. This was mostly due to two factors, the
 first of which was the similar computational environment on campus and XSEDE resources. We were able to
 transfer all of the input data files from campus resources to XSEDE resources relatively painlessly via the
 XSEDE network using standard transfer mechanisms like \ty{scp}. Since both the campus resources and Ranger and
@@ -840,12 +839,12 @@ working effectively on Ranger and Stampede would have been extremely challenging
 %\abhi{rewrite some of Sen's problems in the following paragraph with the actual issues and how  we resolved them}.
 \subsubsection{Technical Issues }
 
-The initial benchmarking and scaling tests that we did for the allocation proposal progressed smoothly. But as with any research project, we ran into many technical challenges when we started running experiments at scale on Ranger. Some were due to scaling issues, there were problems with BigJob design/usage, filesystem issues and some of these led to the user getting banned from the system. Some of the major issues are listed below. 
+The initial benchmarking and scaling tests that we did for the allocation proposal progressed smoothly. But as with any research project, we ran into many technical challenges when we started running experiments at scale on Ranger. There were scaling issues, problems with BigJob design/usage, and file system issues, and some of these led to the user getting banned from the system. Some of the major issues are listed below. 
 \begin{itemize}
-  \item We are always on the look out for issues related to the filesystem, given that hundreds of mlRho processes read from a single input file. We tried to address this problem by striping the directories containing the input files. TACC administrators advised us that this addressed the problem. We gradually scaled-up our job size to 4000 cores on Ranger but this put excessive stress on the lustre filesystem. We then decided to stay below 2000 cores to avoid this issue. Another solution to this problem is to have a different input file for every group of 500 mlRho processes. 
+\item We are always on the lookout for issues related to the file system, given that hundreds of mlRho processes read from a single input file. We tried to address this problem by striping the directories containing the input files. TACC administrators advised us that this addressed the problem. We gradually scaled up our job size to 4000 cores on Ranger but this put excessive stress on the Lustre file system. We then decided to stay below 2000 cores to avoid this issue. Another solution to this problem is to have a different input file for every group of 500 mlRho processes. 
 
   \item The BigJob tool is and has been under active development. There were major design changes happening during the time that we started using it on Ranger. BigJob addresses a range of compute and data problems and multiple example scripts are available on its website. The version we were provided was not suitable for our task, which is bundling and running hundreds of serial jobs. It took us a couple of weeks to find and rectify this problem. 
-  \item The BigJob master process needs to be active from the time the job is submitted to the queue till the end of the run. This means that BigJob will need to be active on the login node of Ranger and not lose connection. The other solution is to run BigJob in a screen session or use other tools like nohup on the login node. We have been warned by TACC administrators about misusing the login node. In the end we were told not to run more than 4 interactive sessions at a time, which is less than optimal but reasonable. 
+\item The BigJob master process needs to be active from the time the job is submitted to the queue till the end of the run. This means that BigJob will need to be active on the login node of Ranger and not lose its connection. The other solution is to run BigJob in a screen session or use other tools like nohup on the login node. We have been warned by TACC administrators about misusing the login node. In the end we were told not to run more than four interactive sessions at a time, which is less than optimal but reasonable. 
   \item We also had problems with some mlRho processes not completing and we had to identify and re-run these jobs. This was a major problem, but both mlRho's and BigJob's version numbers were changing as we used them. This made it difficult to pinpoint the issue. 
 
 \end{itemize}
@@ -886,13 +885,13 @@ planned. For many genomes we have been able to compute up to 1 million basepair 
 able to investigate many more genomes than originally proposed. Results from the new data indicate that the
 zygosity correlation at large distances deviates significantly from theoretical expectation. This finding has
 prompted us to begin new simulation and theoretical work to explain the observed discrepancy between the
-theoretical prediction and our ML measurements on actual data. We believe that these new data will provide new
+theoretical prediction and our ML measurements on actual data. We believe that these new data will provide 
 insights into the evolution of a large number of organisms.
 
 \begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
 \includegraphics[width=0.48\textwidth]{figures/mic-scaling.pdf}
-\caption{The graph compares the performance scaling behavior of mlRho on CPUs and MICs. Each mlRho process on a CPU was run on an individual core while multiple instances of mlRho were run on a single MIC. 488 mlRho instances on a single MIC gave us the same throughput as running 32 instances on 2 nodes of Stampede.  }
+\caption{The graph compares the performance scaling behavior of mlRho on CPUs and MICs. Each mlRho process on a CPU was run on an individual core while multiple instances of mlRho were run on a single MIC. Four hundred and eighty-eight (488) mlRho instances on a single MIC gave us the same throughput as running 32 instances on two nodes of Stampede.  }
 \label{fig:mic-scaling}
 \end{figure}
 
@@ -902,7 +901,7 @@ available on Stampede. Since the Phi runs an embedded Linux Operating System \ci
 it is relatively easy to launch multiple copies of the mlRho binary on the Phi board, assuming
 that the input data set can fit in the memory footprint of the Phi board. In our case we copied input data
 sets to the Phi RAM disk and computed against this copy. Figure \ref{fig:mic-scaling} compares the performance
-of a single Phi board on the {\it F. cylindrus} genome with the scaling measurements presented in figure
+of a single Phi board on the {\it F. cylindrus} genome with the scaling measurements presented in Figure
 \ref{fig:stampede-bench}. Here we compare to the scaling numbers for the Stampede timings using version 2.1 of
 the mlRho software. By using a relatively large number of processes, in this case 488, on the Phi board
 we have been able to achieve throughput that is roughly equal to the throughput of the CPUs on two Stampede
