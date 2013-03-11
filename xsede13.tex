@@ -93,7 +93,7 @@
 \else
 \newcommand{\abhi}[1]{ {}}
 \fi
-\newcommand{\ty}{\texttt}
+%\newcommand{\ty}{\texttt}
 
 
 \begin{document}
@@ -287,7 +287,7 @@ applications, but should also be familiar with the common challenges of the scie
 able to communicate effectively about XSEDE resources with researchers who may have little or no HPC
 experience. The {\bf CAMPUS BRIDGIST} role is distinct from the currently existing Campus Champion role and
 the role filled by the Extended Collaborative Support Service (ECSS) team. As the name implies, the {\bf
-  CAMPUS BRIDGIST} role bridges the gap between the Campus Champion role which is designed to provide
+  CAMPUS BRIDGIST} role bridges the gap between the Campus Champion role, which is designed to provide
 information, guidance, and facilitate gaining access to XSEDE resources and the ECSS role which is designed to
 provide in depth analysis, insight and development for a particular scientific or engineering challenge. The
 role of {\bf CAMPUS BRIDGIST} may, in fact, be filled by the same people who are currently Campus Champions or
@@ -306,7 +306,8 @@ embarrassingly parallel in nature, so the work for each species was able to be d
 computational processes. To manage hundreds of processes for each of the 40+ species of interest, we used the
 BigJob pilot-job tool, which is currently available on many XSEDE resources. BigJob allowed us to distribute
 the analyses for each species across hundreds to a few thousand processor cores depending on the genome sizes
-of species. Thus far we have conducted maximum likelihood (ML) recombination rate studies on a total of 46 individualgenomes. In addition to the use of the BigJob pilot tool we have done extensive performance analysis of the
+of species. Thus far we have conducted maximum likelihood (ML) recombination rate studies on a total of 46 individual
+genomes. In addition to the use of the BigJob tool, we have done extensive performance analysis of the
 mlRho code and, with biologist and computer scientists working in conjunction, have been able to improve the
 runtime of the code by a factor of more than 50.
 
@@ -325,7 +326,7 @@ fascinated humans for thousands of years. It is critical to investigate the fund
 parameters (e.g., population sizes, recombination rates) to disentangle the evolutionary process of the
 existing organisms. The ecological and genetic parameters play important roles in creating opportunities for
 increasing genetic diversity, population divergence, and speciation. Deploying mlRho, a software package which
-generates a novel measure of linkage disequilibrium, on XSEDE resources has allowed us to study these
+generates a novel measure of recombination rates, on XSEDE resources has allowed us to study these
 important population-genetic parameters in a broad assembly of eukaryotic species. This approach has been
 particularly fruitful when applied to the newly available genome sequences now being produced by
 next-generation sequencing methods.
@@ -333,16 +334,17 @@ next-generation sequencing methods.
 Although there are several methods for determining recombination rates, they can be both time and resource
 intensive. The mlRho software employs a novel analytic approach that uses a new metric called the zygosity
 correlation coefficient, which is estimated using ML. This approach requires single individual
-samples, but is extremely data intensive. Using the ML approach implemented in the mlRho software developed at
-IU, and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of
+samples, but is extremely data intensive. Using the ML approach implemented in the mlRho software %developed at
+%IU and the Max Planck Institute for Evolutionary Biology in Germany, 
+and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of
 species with accuracy that was previously unachievable.
 
 \subsection{Program Description}
 The mlRho software is a serial program that estimates mutation, recombination, and sequencing error rates from
 genome sequences~\cite{MEC:MEC4482}. The underlying data consists of assembled sequencing reads obtained from
 a single diploid individual. Such data are collected, for example, for the 1000 human genome project. At each
-sequenced position mlRho reads the number of \ty{A}s, \ty{C}s, \ty{G}s, and \ty{T}s from a file. This produces
-a ``profile''. Given a mutation and error rate, mlRho computes two probabilities for each profile: The
+sequenced position mlRho reads a profile consisting of the number of \texttt{A}s, \texttt{C}s, \texttt{G}s, and \texttt{T}s from a file. 
+   Given a mutation and error rate, mlRho computes two probabilities for each profile: The
 probabilities of observing the profile given that the position is either mutated (heterozygous), or not
 (homozygous). These probabilities depend on the mutation and error rates. By varying them, mlRho finds the
 values that maximize the overall likelihood of the data.
@@ -355,12 +357,12 @@ likelihoods.
 
 \subsection{Linkage Disequilibrium and Recombination Rate}\label{sec:LD}
 Linkage disequilibrium (LD), i.e., the non-random association of alleles at two or more loci, is an important
-parameter for many areas of population genetics.  In recent years, there has been a growing interest in
+parameter for many areas of population genetics.  In recent years, there has been growing interest in
 measuring LD across a broad range of species, because a proper understanding of LD would greatly facilitate
 identifying the genetic loci which underlie important phenotypic variation in natural populations, as well as
 human diseases. More importantly, LD is a population-genetic parameter that can help ascertain recombination
 rate, because recombination is the primary evolutionary force that breaks down LD among genetic loci. Although
-a substantial body of research has been devoted to determining the evolutionary advantages of
+a substantial body of research has been devoted to determining the evolutionary consequences of
 recombination~\cite{resolving-paradox}, the forces that determine recombination rates remain poorly
 understood. For example, we have little idea what determines the occurrence of recombination on a chromosome,
 what impact local DNA polymorphism has on recombination processes, and how recombination rates change over
@@ -391,7 +393,7 @@ differences between the two alleles, we can learn about this history of mutation
 
 The ML approach uses this information to determine the zygosity correlation ($\Delta$) between all the pairs
 of sites that are separated by various distances (i.e., the probability of two sites being both homozygous or
-both heterozygous) in a single diploid genome, using the entire set of individual reads. Population genetic
+both heterozygous) in a single diploid genome, using the entire set of assembled individual reads. Population genetic
 theory then links the expected value of delta to conventional measures of LD, such as D and $r^2$, suggesting
 that $\Delta$ can be used as a valid measure of LD on the population level.
 
@@ -500,10 +502,10 @@ humans to explore intraspecific differences in linkage patterns and population h
 
 For some time the researchers had been running the mlRho code on local IU resources serially, by requesting
 one node at a time. Given that the IU resource, Quarry, had a serial queue that placed multiple serial jobs from
-a single user on the same node, this was a feasible course. Unfortunately most of the major XSEDE resources do
+a single user on the same node, this was a feasible course. Unfortunately, most of the major XSEDE resources do
 not provide such a high throughput queue. The users are charged for the whole node, irrespective of the number
 of cores their job actually utilizes. Moreover, the larger machines are configured for highly parallel jobs and
-the schedulers are configured to prioritize larger jobs. Many XSEDE centers provide workarounds for this
+the schedulers are configured to prioritize larger jobs. Many XSEDE centers have established workarounds for this
 problem by providing users with wrappers and other software which bundle many serial jobs into larger jobs.
 
 
@@ -530,8 +532,8 @@ machines.
 Organism Type		& Size of profile& \multicolumn{2}{|c|}{Distance/sec}  \\ \hline
 	&   & V 1.10 & V 2.1 \\ \hline
 {\it F. cylindrus}  & 0.72 GB & 0.0034 & 0.323 \\ \hline
-{\it P. ornithorhynchus}  & 11 GB &$2.3{\times}10{-4}$ & 0.020 \\ \hline
-{\it C. familiaris}  & 31 GB & $8.1{\times}10^{-5}$ & 0.005 \\
+{\it P. ornithorhynchus (platypus)}  & 11 GB &$2.3{\times}10{-4}$ & 0.020 \\ \hline
+{\it C. familiaris (dog)}  & 31 GB & $8.1{\times}10^{-5}$ & 0.005 \\
 \hline
 %Intel & 405 & 388 & 364 & 346\\
 %\hline
@@ -539,7 +541,7 @@ Organism Type		& Size of profile& \multicolumn{2}{|c|}{Distance/sec}  \\ \hline
 %\hline
 
 \end{tabular}
-\caption{The table lists three organisms which were chosen to represent profiles of different size. The second column shows the size of the profile in gigabytes. The third column shows the distance travelled per second by V1.10 and V2.1 on one core on Ranger and Stampede, respectively. The rate of distance is a function of the size of the genome.  } 
+\caption{The table lists three organisms which were chosen to represent profiles of different size. The second column shows the size of the profile in gigabytes. The third column shows the distance travelled per second by V1.10 and V2.1 on one core on Ranger and Stampede, respectively. The rate of distance is a function of the size of the genome. \abhi{need to fix width} } 
 \label{table:cache_comp}
 \end{table}
 
@@ -554,8 +556,8 @@ Organism Type		& Size of profile& \multicolumn{2}{|c|}{Distance/sec}  \\ \hline
 \label{sec:scalability}
 We used the BigJob installation already in place on Ranger. The major focus of our tests was to discover how
 mlRho scaled when we increased the number of concurrent mlRho processes. We took three different organisms
-based on the size of their genome: a small genome {\it F. cylindrus}, a medium genome {\it
-P. ornithorhynchus}, and a large genome {\it C. familiaris}. Data sizes are provided in Table
+based on the size of their genome: a small genome {\it F. cylindrus} (diatom), a medium genome {\it
+P. ornithorhynchus} (platypus), and a large genome {\it C. familiaris} (dog). Data sizes are provided in Table
 \ref{table:cache_comp}. We ran the mlRho program with each of these genomes starting with 16 concurrent mlRho
 instances reading from the same data file. We let the processes run for 24 hours and measured how many
 distances were computed in aggregate. We repeated this for each of the genomes with 16, 32, 64 and 128
@@ -604,7 +606,7 @@ We have carefully constructed a detailed plan on how to proceed with our experim
 same file with no performance degradation. We estimated that we can feasibly scale up to $\approx$500
 processes reading from the same data file, without noticeable performance degradation. By making multiple
 copies of the data file, we could scale up to $\approx$5000 processes. Job requests of 5000 processes on
-Ranger and Kraken are appropriate and we have not experienced extremely long wait times with past BigJob
+Ranger and Kraken are appropriate and we have not experienced extremely long wait times (more than 48 hours) with past BigJob
 experiments. We proposed that with this design, we could complete our analysis within four to five months from
 the time of the allocation award. This proposed framework was already working on Ranger, and was in the
 process of being implemented on Kraken.
@@ -612,7 +614,7 @@ process of being implemented on Kraken.
 In our initial testing of the three sample genomes, we worked out a few issues that could have affected
 scalability. One of those issues was data access and file striping. When we had scaled up to 128 cores we
 noticed some intermittent I/O issues. Since all the concurrent instances read from a single file, if that file is
-singly striped in a Lustre file system it will introduce a large load on the Lustre servers. We have remedied
+singly striped in a Lustre file system, it will introduce a large load on the Lustre servers. We have remedied
 this issue by moving the data files to the scratch file system on Ranger and striping the data files 16
 ways. While this only occurred with the larger (11 and 31 GB) data files, we are aware that this might limit
 our scalability. In the future, if I/O becomes an issue for scalability, we plan to use multiple copies of the
@@ -622,32 +624,32 @@ same time.
 \section{Optimization and Performance Tuning of mlRho}\label{sec:optimization}
 \subsection{Performance Analysis}\label{subsec:analysis}
 %\subsection{Source-code Development and Optimization}
-The mlRho application was originally developed through a collaboration of research labs at IU and the
+The mlRho application is being developed through a collaboration of research labs at IU and the
 Max Planck Institute for Evolutionary Biology in Germany. Following initial benchmarking and scalability
 testing for an XSEDE allocation proposal, staff members from the IU Pervasive Technology Institute worked
-together with the mlRho application developers at IU and the Max Planck Institute for Evolutionary
+together with the mlRho application developer at the Max Planck Institute for Evolutionary
 Biology to improve the serial performance of the code. As a result of the investigations by PTI, a new version
 has been recently released which is vastly more efficient and delivers much better performance when compared to
 the original version. While the work described in the previous sections could be addressed by the {\bf CAMPUS
   BRIDGIST} role, the analysis and optimization described in this section would most likely be associated with
-the XSEDE ECSS team. In this particular case both roles were fulfilled by a single team member at PTI; however,
+the XSEDE ECSS team. In this particular case both roles were fulfilled by a single team member at PTI. However,
 it is certainly possible that these two roles could be filled by different teams at different institutions.
 
 \subsection{Implementation of  Performance Analysis Findings}
-Research staff at PTI began code optimization with \texttt{mlrho} version 1.10. As a first step we compiled
-the code with compilers other than the standard GNU compiler that had been used by \texttt{mlrho}. Both the
+Research staff at PTI began code optimization with mlRho version 1.10. As a first step we compiled
+the code with compilers other than the standard GNU compiler that had been used by mlRho. Both the
 Intel and PGI compilers produced a runtime improvement of $\approx$10\% over the GNU compiler on Ranger, this
 is a fairly typical result that the optimization team at PTI has seen in many instances. From this point we
 determined that further improvements would most likely be gained by modifications to the source code. To
-inform the core developers at the IU and Max Planck Institute for Evolutionary Biology research labs as to
-where their efforts would be best spent, we conducted a detailed analysis of \texttt{mlrho} version 1.10 using
-the Vampir toolchain. The analysis led the core developers to focus on two aspects of the code: data handling
-and repeated computation. As to data handling, many profiles occur repeatedly in a data set. To address this
-an additional program, \ty{formatPro}, was written to compress the raw profiles. The \ty{formatPro} program reads profiles either from a text
+inform the core developer at the Max Planck Institute for Evolutionary Biology as to
+where his efforts would be best spent, we conducted a detailed analysis of mlRho version 1.10 using
+the Vampir toolchain. The analysis led the core developer to focus on two aspects of the code: data handling
+and repeated computation. As to data handling, many profiles occur repeatedly in a data set. To address this,
+an additional program, formatPro, was written to compress the raw profiles. The formatPro program reads profiles either from a text
 file or from a BAM file, the standard format for distributing genome alignment files \citep{li09:seq}. 
 
-By introducing this new method of data storage performance increased by more than a factor of two from version
-1.16 to 1.21 (see Figure \ref{fig:stampede-bench}). The \ty{formatPro} program writes a binary table of unique
+This new method of data storage increased performance by more than a factor of two from version
+1.16 to 1.21 (see Figure \ref{fig:stampede-bench}). The formatPro program writes a binary table of unique
 profiles.
 % \begin{lstlisting}
 % /* write tag for recognizing file type */
@@ -664,14 +666,14 @@ profiles.
 %   int n;                 /* number of occurrences */
 % }Profile;
 % \end{lstlisting}
-The binary file can then be inspected using the program \ty{inspectPro}.
+The binary file can then be inspected using the program inspectPro.
 % \begin{verbatim}
 % inspectPro profileDb.sum | head -n 3
 % #ID	Count	A	C	G	T
 % 0	1411292	0	0	4	0
 % 1	1410182	4	0	0	0
 % \end{verbatim}
-In addition to the profiles file, \ty{formatPro} writes a binary file
+In addition to the profiles file, formatPro writes a binary file
 listing the profile ID at every genome position.
 % \begin{verbatim}
 % inspectPro profileDb.pos | head -n 3
@@ -679,14 +681,14 @@ listing the profile ID at every genome position.
 % 1	0
 % 2	1
 % \end{verbatim}
-Finally, \ty{formatPro} writes a binary file of the contig lengths.
+Finally, formatPro writes a binary file of the contig lengths.
 % \begin{verbatim}
 % inspectPro profileDb.con | head -n 3
 % #ID	Length
 % 0	434
 % 1	32
 % \end{verbatim}
-The mlRho program can then read the profiles from the files produced by \ty{formatPro}.
+The mlRho program can then read the profiles from the files produced by formatPro.
 % \begin{lstlisting}
 % /* read first three characters */
 % fread(&tag,sizeof(char),3,fp);
@@ -702,8 +704,8 @@ The mlRho program can then read the profiles from the files produced by \ty{form
 % setNumProfiles(numProfiles);
 % \end{lstlisting}
 The profiles are read individually rather than in a single
-step, because we found that this was
-faster. The improvement in data handling introduced with these changes resulted in an overall speedup of the
+step. %, because we found that this was faster.
+ The improvement in data handling introduced with these changes resulted in an overall speedup of the
 serial code of a factor of 2-4X. The next focus was to look at the repeated computation that occurred in the
 mlRho program. 
 
@@ -721,7 +723,7 @@ versions 1.21 and 1.23.
 %   likelihood += log(l) * profiles[i].n;
 % }
 %\end{lstlisting}
-The calculation of the unique likelihoods are now written to disk for future reference.
+In addition, the unique likelihoods are now written to disk for future reference.
 % \begin{lstlisting}
 % /* write tag for identifying file */
 % fwrite("lik",sizeof(char),3,fp);
@@ -737,7 +739,7 @@ The calculation of the unique likelihoods are now written to disk for future ref
 % \end{lstlisting}
 
 In the disequilibrium analysis of the 1.10 version, the single-site likelihoods were recomputed for every
-step. To improve efficiency they are now either read from disk or stored after the first pass across the
+step. To improve efficiency, they are now either read from disk or stored after the first pass across the
 data. In addition, we noticed that by ignoring the order of two profiles, we could halve the number of
 distinct profile pairs stored in a search tree. The likelihood computation during traversal of this tree is
 now based entirely on precomputed probabilities.
@@ -760,8 +762,9 @@ now based entirely on precomputed probabilities.
 % \ty{h2} the probability of observing a heterozygous pair. These two
 % quantities are a function of the rate of recombination. The variable
 % \ty{complementHalf} simply stores $1-(\ty{h0} + \ty{h2})$.
-The combination of better data handling and careful avoidance of repeated computation led to an overall 60-fold
-speedup of mlRho while maintaining its minimal memory requirement.
+The combination of better data handling and careful avoidance of repeated computation led to an overall 50-fold
+speedup of mlRho while maintaining the minimal memory 
+requirement of version 1.10
 
 \begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
@@ -820,10 +823,10 @@ speedup of mlRho while maintaining its minimal memory requirement.
 \section{User Experience, Preliminary Science Results, and Future Work}\label{sec:results}
 \subsection{User Experience}
 Overall the end user experience of migrating from the relatively modest Quarry and Mason local clusters to the
-much larger Ranger resource on XSEDE was a very smooth transition. This was mostly due to two factors, the
+much larger Ranger resource on XSEDE was a smooth transition. This was mostly due to two factors, the
 first of which was the similar computational environment on campus and XSEDE resources. We were able to
-transfer all of the input data files from campus resources to XSEDE resources relatively painlessly via the
-XSEDE network using standard transfer mechanisms like \ty{scp}. Since both the campus resources and Ranger and
+transfer all of the input data files from campus resources to XSEDE resources via the
+XSEDE network using standard transfer mechanisms like \texttt{scp}. Since both the campus resources and Ranger and
 Stampede at TACC use a variant of the modules software environment management system, replicating the software
 environment on XSEDE resources was a simple matter of finding and loading the correct modules. Although the
 scheduling systems used on the campus resources and XSEDE resources were different (TORQUE vs. SGE) there were
@@ -833,8 +836,8 @@ easy.
 The other factor in simplifying  the transition was the use of the BigJob framework coupled with the
 consultation advice from the PTI staff. The initial transition to running mlRho in a massively parallel
 way on Ranger was fairly straightforward (mainly due to the embarrassingly parallel nature of the problem),
-and produced excellent throughput. Using BigJob to run thousands of \ty{mlrho} processes was not without
-issues though. Without the aid of the PTI staff to assist in debugging and troubleshooting these issues,
+and produced excellent throughput. Using BigJob to run thousands of mlRho processes was not without
+issues, though. Without the aid of the PTI staff to assist in debugging and troubleshooting these issues,
 working effectively on Ranger and Stampede would have been extremely challenging. 
 %\abhi{rewrite some of Sen's problems in the following paragraph with the actual issues and how  we resolved them}.
 \subsubsection{Technical Issues }
@@ -916,7 +919,7 @@ In all, the project of transitioning and scaling up mlRho workloads from campus 
 to XSEDE resources has been very successful, not only from the perspective of accelerating scientific
 discovery, but also from the perspective of providing a very real and useful example of the value of a {\bf
   CAMPUS BRIDGIST}. Through this project we have shown that a relatively small investment of effort by people
-with the right mix of skills can make a big difference in how challenging it is to transition from local
+with the right mix of skills can make a big difference when transitioning from local
 resources to XSEDE resources. We propose that XSEDE consider including the {\bf CAMPUS BRIDGIST} role in more
 of its supported projects, particularly those projects with PIs who are relatively new to high performance
 computing concepts like batch scheduling, application scalability, and high performance file systems. As the
