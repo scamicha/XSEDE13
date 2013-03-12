@@ -217,7 +217,8 @@ resources. XSEDE machines are far larger (by at least an order of magnitude) tha
   taken many steps to make this easier, including the Campus Bridging initiative, the Campus Champions
 program, the Extended Collaborative Support Service (ECSS) program, and through education and outreach.
 
-  In this paper, our team of biologists and application support analysts (includ-ing a Campus Champion) dissect a computationally intensive biology project and share the insights we have gained
+  In this paper, our team of biologists and application support analysts (includ-
+ing a Campus Champion) dissect a computationally intensive biology project and share the insights we have gained
   to help strengthen the programs mentioned above. Our team consists of biologists and application support
   analysts (including a Campus Champion). We worked on a project to calculate population mutation and
   recombination rates of tens of genome profiles using the mlRho, a serial,
@@ -278,7 +279,10 @@ navigating the complexity of a much larger system.
 
 
 
-In this paper we propose a new and novel role--that of {\bf  CAMPUSBRIDGIST}--to help address the challenges faced by re-searchers when moving from their workstation to XSEDE re-sources. A {\bf CAMPUS BRIDGIST} 
+In this paper we propose a new and novel role--that of {\bf  CAMPUS
+BRIDGIST}--to help address the challenges faced by re-
+searchers when moving from their workstation to XSEDE re-
+sources. A {\bf CAMPUS BRIDGIST} 
 helps to bridge the gap between domain science and computer science and helps researchers who want to use
 XSEDE resources move their applications from small-scale campus resources to much larger XSEDE resources. A
 {\bf CAMPUS BRIDGIST} is mostly a technologist, who is able to apply many different approaches to scaling up
@@ -321,7 +325,8 @@ program and initial scientific results and in section \ref{sec:conclusion} we pr
 
 \section{Scientific Background}\label{sec:background}
 The amazing biodiversity on our planet--resulting from billions of years of evolution--has fascinated humans for thousands of years. To understand how this diversity arises and is maintained, it is critical to determine fundamental ecological and genetic parameters (e.g., population sizes, recombination rates) for a range of speices. These parameters play important roles in creating opportunities for increasing genetic diversity, population divergence, and speciation. Deploying mlRho, a software package which uses next-generation genomic sequence to generate a novel measure of linkage disequilibrium, on XSEDE resources has allowed us to study these important population-genetic parameters in a broad assembly of eukaryotic species. This approach has been particularly fruitful when applied to the newly available genome sequences now being produced by next-generation sequencing methods. 
-Although there are several methods for determining recombination rates, they can be both time and resource intensive. The mlRho software employs a novel analytic approach that uses a new metric called the zygosity correlation coefficient, which is estimated using maximum likelihood (ML) methods. This approach only requires single individual genome sequences, but is extremely data intensive. Using the ML approach implemented in the mlRho software developed at IU, and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of species with accuracy that was previously unachievable. 
+
+Although there are several methods for determining recombination rates, they can be both time and resource intensive. The mlRho software employs a novel analytic approach that uses a new metric called the zygosity correlation coefficient, which is estimated using maximum likelihood (ML) methods. This approach only requires single individual genome sequences, but is extremely data intensive. Using the ML approach implemented in the mlRho software developed at IU, and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of species with accuracy that was previously unachievable. 
 
 %Understanding how the amazing biodiversity on our planet has arisen is a biological question that has
 %fascinated humans for thousands of years. It is critical to investigate the fundamental ecological and genetic
@@ -396,7 +401,7 @@ differences between the two alleles, we can learn about this history of mutation
 The ML approach uses this information to determine the zygosity correlation ($\Delta$) between all the pairs
 of sites that are separated by various distances (i.e., the probability of two sites being both homozygous or
 both heterozygous) in a single diploid genome, using the entire set of assembled individual reads. Population genetic
-theory then links the expected value of delta to conventional measures of LD, such as $\rho$, suggesting
+theory then links the expected value of $\Delta$ to conventional measures of LD, such as $\rho$, suggesting
 that $\Delta$ can be used as a valid measure of LD on the population level.
 
 % {\center \bf Insert equation 11, 14, and 5d from Lynch unpublished.}
@@ -583,7 +588,7 @@ Ranger with the improved version of mlRho as Ranger has since been decommissione
 %\abhi{notes: startup alloc help -- CBridgers's help needed, scalability tests, etc}
 
 In general, obtaining an XSEDE allocation with sufficient SUs is an important step in the process of executing
-a computationally intensive research plan. To someone who does have a computer science background, writing a
+a computationally intensive research plan. Even to someone who has a computer science background, writing a
 successful XSEDE proposal is not a trivial task. The computational justification for the allocation needs to
 be concrete and this is especially true if the request is for more than a few million SUs. XSEDE
 allocation committees are routinely faced with the fact that the machines are oversubscribed by a factor of 2:1.
@@ -624,6 +629,8 @@ same data file to prevent an excessive number of concurrent processes from readi
 same time.
 
 \section{Optimization and Performance Tuning of mlRho}\label{sec:optimization}
+\abhi{talk about how the faster mlrho is awesome. for xsede+other users
+why everyone should attempt analysis}
 \subsection{Performance Analysis}\label{subsec:analysis}
 %\subsection{Source-code Development and Optimization}
 The mlRho application is being developed through a collaboration of research labs at IU and the
@@ -706,7 +713,18 @@ The mlRho program can then read the profiles from the files produced by formatPr
 % setNumProfiles(numProfiles);
 % \end{lstlisting}
 The profiles are read individually rather than in a single
-step. %, because we found that this was faster.
+step, because we found that this was faster. \abhi{Needs fixing, see Bernhard's comment: 
+ - Figure 3: The drop in performance between 2.0 and 2.1 can only be due
+ to my switch between single step reading/writing and iterated
+ reading/writing. On my machine this sped up the program, but apparently
+ not on yours. This contradicts the phrase "because we found that this
+ was faster". Now, there was also the issue of slowdown due to concurrent
+ analyses of large files. It appeared to me from Abhinav's feedback in
+ January that switching from single-step i/o to iterated i/o mitigated
+ this problem. If so, then "because we found that this was faster" should
+ be amended accordingly. If not, we should switch back to 2.0 (see my
+ change log at the end of mlRhoDoc.pdf)
+}
  The improvement in data handling introduced with these changes resulted in an overall speedup of the
 serial code of a factor of 2-4X. The next focus was to look at the repeated computation that occurred in the
 mlRho program. 
@@ -896,7 +914,7 @@ insights into the evolution of a large number of organisms.
 \begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
 \includegraphics[width=0.48\textwidth]{figures/mic-scaling.pdf}
-\caption{The graph compares the performance scaling behavior of mlRho on CPUs and MICs. Each mlRho process on a CPU was run on an individual core while multiple instances of mlRho were run on a single MIC. Four hundred and eighty-eight (488) mlRho instances on a single MIC gave us the same throughput as running 32 instances on two nodes of Stampede.  }
+\caption{The graph compares the performance scaling behavior of mlRho on CPUs and Phis. Each mlRho process on a CPU was run on an individual core while multiple instances of mlRho were run on a single Phi. Four hundred and eighty-eight (488) mlRho instances on a single Phi gave us the same throughput as running 32 instances on two nodes of Stampede.  }
 \label{fig:mic-scaling}
 \end{figure}
 
@@ -932,6 +950,7 @@ professionals.
 
 %ACKNOWLEDGMENTS are optional
 \section{Acknowledgments}
+
 %
 % The following two commands are all you need in the
 % initial runs of your .tex file to
