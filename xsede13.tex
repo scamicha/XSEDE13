@@ -210,18 +210,18 @@ Robert Henschel\\
 
 \maketitle
 \begin{abstract}
-  An increasing number of biologists'' computational demands have outgrown the capacity of desktop
+  An increasing number of biologist's computational demands have outgrown the capacity of desktop
 workstations and they are turning to supercomputers to run their simulations and calculations. Many of today's computational problems, however, require larger resource commitments than even individual universities can
  provide. XSEDE is one of the first places researchers turn to when they outgrow their campus
 resources. XSEDE machines are far larger (by at least an order of magnitude) than what most universities offer. But transitioning from a campus resource to an XSEDE resource is seldom a trivial task but XSEDE has
   taken many steps to make this easier, including the Campus Bridging initiative, the Campus Champions
-program, the Extended Collaborative Support Service (ECSS) program, and through education and outreach.
+program, the Extended Collaborative Support Service (ECSS) \cite{ecss_web} program, and through education and outreach.
 
   In this paper, our team of biologists and application support analysts (includ-
 ing a Campus Champion) dissect a computationally intensive biology project and share the insights we have gained
   to help strengthen the programs mentioned above. Our team consists of biologists and application support
   analysts (including a Campus Champion). We worked on a project to calculate population mutation and
-  recombination rates of tens of genome profiles using the mlRho, a serial,
+  recombination rates of tens of genome profiles using the mlRho \cite{MEC:MEC4482}, a serial,
   open-source, genome analysis code. For the initial investigation, we initially estimated that we would need
   6.3 million service units (SUs) on the Ranger system. Three of the most important places where the biologists needed help in
   transitioning to XSEDE were (i) preparing the proposal for 6.3 million SUs on XSEDE, (ii) scaling up the
@@ -232,7 +232,7 @@ ing a Campus Champion) dissect a computationally intensive biology project and s
   with (ii) and (iii). But (i), (ii) and (iii) are often not part of a Campus Champion's regular job
   description. To someone writing an XSEDE proposal for the first time, a link to the guidelines and a few
   pointers may not always be enough for a successful application. In this paper we describe a new role for a
-  {\bf CAMPUS BRIDGIST} to play in bridging the gaps between existing programs and present mlRho as an ideal
+  campus bridging expert to play in bridging the gaps between existing programs and present mlRho as an ideal
   example case.
 \end{abstract}
 
@@ -266,53 +266,46 @@ complexity is in many cases a daunting prospect for a researcher new to XSEDE, w
 computational experience. Even savvy users who have experience with campus clusters can encounter issues when
 scaling up to XSEDE resources.
 
-This challenge is distinct from the challenge of providing a canonical software stack (proposed via a ROCKS
-Roll by \citeauthor{stewart2012}), but can be compounded by widely divergent software environments between
-campus and XSEDE resources. Even when the operating environment is not very different on XSEDE resources,
-compared to campus resources, researchers can face challenges with the sheer scale and complexity of XSEDE
-resources. In the situation described in this paper, campus bridging included to helping the researchers
-redesign their experiments and scale up their workflows to move effectively from their local workstations to IU's modest
-sized cluster environment, and then on to using the much larger XSEDE machines at TACC. It should be
-noted that, in general, the differences in software environment between the IU campus resources and the TACC
-supercomputers were superficial; the real challenges lie in scaling up the applications and
-navigating the complexity of a much larger system.
+This challenge is distinct from the challenge of providing a canonical software stack, but can be compounded
+by widely divergent software environments between campus and XSEDE resources. Even when the operating
+environment is not very different on XSEDE resources, compared to campus resources, researchers can face
+challenges with the sheer scale and complexity of XSEDE resources. In the situation described in this paper,
+campus bridging included to helping the researchers redesign their experiments and scale up their workflows to
+move effectively from their local workstations to IU's modest sized cluster environment, and then on to using
+the much larger XSEDE machines at TACC. It should be noted that, in general, the differences in software
+environment between the IU campus resources and the TACC supercomputers were superficial; the real challenges
+lie in scaling up the applications and navigating the complexity of a much larger system.
 
-
-
-In this paper we propose a new and novel role--that of {\bf  CAMPUS
-BRIDGIST}--to help address the challenges faced by re-
-searchers when moving from their workstation to XSEDE re-
-sources. A {\bf CAMPUS BRIDGIST} 
-helps to bridge the gap between domain science and computer science and helps researchers who want to use
-XSEDE resources move their applications from small-scale campus resources to much larger XSEDE resources. A
-{\bf CAMPUS BRIDGIST} is mostly a technologist, who is able to apply many different approaches to scaling up
-applications, but who should also be familiar with the common challenges of the scientific domain and 
-able to communicate effectively about XSEDE resources with researchers who may have little or no HPC
-experience. The {\bf CAMPUS BRIDGIST} role is distinct from the current Campus Champion and
-the role filled by the Extended Collaborative Support Service (ECSS) team. As the name implies, the {\bf
-  CAMPUS BRIDGIST} bridges the gap between the Campus Champion role -- which is designed to provide
-information, guidance, and facilitate access to XSEDE resources, and the ECSS role, which is designed to
-provide in-depth analysis, insight and development for a particular scientific or engineering challenge. The
-role of {\bf CAMPUS BRIDGIST} may, in fact, be filled by the same people who are currently Campus Champions or
-ECSS team members; in many ways the functions of the {\bf CAMPUS BRIDGIST} are an extension of
- ECSS and Campus Champion functions. In this paper we discuss how, by filling the role of
-{\bf CAMPUS BRIDGIST}, we were able to bridge the gap between many different sized resources and help
-researchers in the field of population genomics use some of the largest XSEDE resources to conduct a research
-program at an unprecedented magnitude.
-
+In this paper we propose a new and novel role--that of campus bridging expert--to help address the challenges
+faced by researchers when moving from their workstation to XSEDE resources. A campus bridging expert helps
+to bridge the gap between domain science and computer science and helps researchers who want to use XSEDE
+resources move their applications from small-scale campus resources to much larger XSEDE resources. A campus
+bridging expert is mostly a technologist, who is able to apply many different approaches to scaling up
+applications, but who should also be familiar with the common challenges of the scientific domain and able to
+communicate effectively about XSEDE resources with researchers who may have little or no HPC experience. The
+campus bridging expert role is distinct from the current Campus Champion and the role filled by the Extended
+Collaborative Support Service (ECSS) team. As the name implies, the campus bridging expert bridges the gap
+between the Campus Champion role -- which is designed to provide information, guidance, and facilitate access
+to XSEDE resources, and the ECSS role, which is designed to provide in-depth analysis, insight and development
+for a particular scientific or engineering challenge. The role of campus bridging expert may, in fact, be
+filled by the same people who are currently Campus Champions or ECSS team members; in many ways the functions
+of the campus bridging expert are an extension of ECSS and Campus Champion functions. In this paper we discuss
+how, by filling the role of campus bridging expert, we were able to bridge the gap between many different
+sized resources and help researchers in the field of population genomics use some of the largest XSEDE
+resources to conduct a research program at an unprecedented magnitude.
 
 Researchers in the Indiana University (IU) Department of Biology have been conducting studies into population
 genomics and evolution for some time. A newly developed software program called mlRho \cite{MEC:MEC4482} is
-being used to study ecological and genetic parameters in different populations. While
-mlRho is a serial code, the investigation we have conducted with our XSEDE allocation was
-embarrassingly parallel in nature. The work for each species was divided among many
-computational processes. To manage hundreds of processes for each of the 40+ species of interest, we used the
-BigJob pilot-job tool, which is currently available on many XSEDE resources. BigJob allowed us to distribute
-the analyses for each species across hundreds to thousands of processor cores, depending on the genome sizes
-of species. Thus far we have conducted maximum likelihood (ML) recombination rate studies on a total of 46 individual
-genomes. In addition to use of the BigJob tool, we have done extensive performance analysis of the
-mlRho code and, with biologist and computer scientists working in conjunction, and have been able to improve the
-runtime of the code by a factor of more than 50.
+being used to study ecological and genetic parameters in different populations. While mlRho is a serial code,
+the investigation we have conducted with our XSEDE allocation was embarrassingly parallel in nature. The work
+for each species was divided among many computational processes. To manage hundreds of processes for each of
+the 40+ species of interest, we used the SAGA BigJob pilot-job tool \cite{bigjob_web}, which is
+currently available on many XSEDE resources. BigJob allowed us to distribute the analyses for each species
+across hundreds to thousands of processor cores, depending on the genome sizes of species. Thus far we have
+conducted maximum likelihood (ML) recombination rate studies on a total of 46 individual genomes. In addition
+to use of the BigJob tool, we have done extensive performance analysis of the mlRho code and, with biologist
+and computer scientists working in conjunction, and have been able to improve the runtime of the code by a
+factor of more than 50.
 
 The remainder of the paper is organized as follows: section \ref{sec:background} gives some insight into the
 computational methodologies and principles of biology being explored by the mlRho code. Section
@@ -522,12 +515,11 @@ problem by providing users with wrappers and other software which bundle many se
 We used the SAGA BigJob to bundle our single-core serial mlRho simulations. We have integrated mlRho with
 BigJob and conducted several experiments on Ranger and Stampede which have shown good performance and
 scalability.  BigJob is pilot-job tool available on many XSEDE resources such as Kraken, Ranger, and
-Lonestar. Many researchers have successfully used BigJob~\cite{bigjob_web} to bundle hundreds of smaller jobs
+Lonestar. Many researchers have successfully used BigJob~\cite{saga_bigjob_condor_cloud} to bundle hundreds of smaller jobs
 into larger, more manageable groups of jobs~\cite{Luckow:2008fp, async_repex11}.
 
 BigJob allows the user to maintain a list of processors allocated after the job request becomes active. The
-user can then assign these processors and start and manage jobs. For more details on the BigJob implementation
-see reference~\cite{saga_bigjob_condor_cloud}. The main benefit of doing this is that instead of submitting
+user can then assign these processors and start and manage jobs. The main benefit of doing this is that instead of submitting
 thousands of single core job requests to the queue, we can submit hundreds of large job requests ($\approx$
 500 to 5000 cores) to the queue. This reduces the overall number of job submissions to the queue and thereby,
 to some extent, time spent waiting in the queue. This job size is also more appropriate for many of the XSEDE
@@ -593,13 +585,13 @@ successful XSEDE proposal is not a trivial task. The computational justification
 be concrete and this is especially true if the request is for more than a few million SUs. XSEDE
 allocation committees are routinely faced with the fact that the machines are oversubscribed by a factor of 2:1.
 
-
 We believe that allocation proposal preparation is one key area where users new to XSEDE need significant
-help. In the case of the mlRho project, research staff from the Indiana University Pervasive Technology Institute (PTI) helped biologists to prepare an allocation
-proposal. We started by requesting startup allocations on Ranger and Kraken. We benchmarked mlRho on a single
-core on Ranger and Kraken. We then did a scalability study as described in section \ref{sec:scalability}. It
-is important to accurately estimate and justify the total number of SUs that we request from XSEDE.  We also
-need to justify the science, but if the research is supported by a grant, further justification is not
+help. In the case of the mlRho project, research staff from the Indiana University Pervasive Technology
+Institute (PTI) helped biologists to prepare an allocation proposal. We started by requesting startup
+allocations on Ranger and Kraken. We benchmarked mlRho on a single core on Ranger and Kraken. We then did a
+scalability study as described in section \ref{sec:scalability}. It is important to accurately estimate and
+justify the total number of SUs that we request from XSEDE.  We also need to justify the science, but if the
+research is supported by a current grant award from a federal science agency, further justification is not
 needed. Given that we are requesting shared resources, it is important that we make an effort to analyze and
 optimize our code. This reduces our own usage time and also turnaround time. We began to look into code
 optimization shortly after submitting the proposal. Our efforts on the analysis and optimization of the code
@@ -628,7 +620,7 @@ our scalability. In the future, if I/O becomes an issue for scalability, we plan
 same data file to prevent an excessive number of concurrent processes from reading from the same file at the
 same time.
 
-\section{Optimization and Performance Tuning of mlRho}\label{sec:optimization}
+\section{Optimization of mlRho}\label{sec:optimization}
 \abhi{talk about how the faster mlrho is awesome. for xsede+other users
 why everyone should attempt analysis}
 \subsection{Performance Analysis}\label{subsec:analysis}
@@ -639,8 +631,8 @@ testing for an XSEDE allocation proposal, staff members from the IU Pervasive Te
 together with the mlRho application developer at the Max Planck Institute for Evolutionary
 Biology to improve the serial performance of the code. As a result of the investigations by PTI, a new version
 has been recently released which is vastly more efficient and delivers much better performance when compared to
-the original version. While the work described in the previous sections could be addressed by the {\bf CAMPUS
-  BRIDGIST} role, the analysis and optimization described in this section would most likely be associated with
+the original version. While the work described in the previous sections could be addressed by the campus
+bridging expert role, the analysis and optimization described in this section would most likely be associated with
 the XSEDE ECSS team. In this particular case both roles were fulfilled by a single team member at PTI. However,
 it is certainly possible that these two roles could be filled by different teams at different institutions.
 
@@ -713,18 +705,7 @@ The mlRho program can then read the profiles from the files produced by formatPr
 % setNumProfiles(numProfiles);
 % \end{lstlisting}
 The profiles are read individually rather than in a single
-step, because we found that this was faster. \abhi{Needs fixing, see Bernhard's comment: 
- - Figure 3: The drop in performance between 2.0 and 2.1 can only be due
- to my switch between single step reading/writing and iterated
- reading/writing. On my machine this sped up the program, but apparently
- not on yours. This contradicts the phrase "because we found that this
- was faster". Now, there was also the issue of slowdown due to concurrent
- analyses of large files. It appeared to me from Abhinav's feedback in
- January that switching from single-step i/o to iterated i/o mitigated
- this problem. If so, then "because we found that this was faster" should
- be amended accordingly. If not, we should switch back to 2.0 (see my
- change log at the end of mlRhoDoc.pdf)
-}
+step, because we found that this was for stability on the Lustre filesystem.
  The improvement in data handling introduced with these changes resulted in an overall speedup of the
 serial code of a factor of 2-4X. The next focus was to look at the repeated computation that occurred in the
 mlRho program. 
@@ -864,11 +845,24 @@ working effectively on Ranger and Stampede would have been extremely challenging
 
 The initial benchmarking and scaling tests that we did for the allocation proposal progressed smoothly. But as with any research project, we ran into many technical challenges when we started running experiments at scale on Ranger. There were scaling issues, problems with BigJob design/usage, and file system issues, and some of these led to the user getting banned from the system. Some of the major issues are listed below. 
 \begin{itemize}
-\item We are always on the lookout for issues related to the file system, given that hundreds of mlRho processes read from a single input file. We tried to address this problem by striping the directories containing the input files. TACC administrators advised us that this addressed the problem. We gradually scaled up our job size to 4000 cores on Ranger but this put excessive stress on the Lustre file system. We then decided to stay below 2000 cores to avoid this issue. Another solution to this problem is to have a different input file for every group of 500 mlRho processes. 
-
-  \item The BigJob tool is and has been under active development. There were major design changes happening during the time that we started using it on Ranger. BigJob addresses a range of compute and data problems and multiple example scripts are available on its website. The version we were provided was not suitable for our task, which is bundling and running hundreds of serial jobs. It took us a couple of weeks to find and rectify this problem. 
-\item The BigJob master process needs to be active from the time the job is submitted to the queue till the end of the run. This means that BigJob will need to be active on the login node of Ranger and not lose its connection. The other solution is to run BigJob in a screen session or use other tools like nohup on the login node. We have been warned by TACC administrators about misusing the login node. In the end we were told not to run more than four interactive sessions at a time, which is less than optimal but reasonable. 
-  \item We also had problems with some mlRho processes not completing and we had to identify and re-run these jobs. This was a major problem, but both mlRho's and BigJob's version numbers were changing as we used them. This made it difficult to pinpoint the issue. 
+\item We had to remain vigilant for issues related to the Lustre file system, given that hundreds of mlRho
+  processes read from a single input file. We tried to address this problem by striping the directories
+  containing the input files. TACC administrators advised us that striping the input files addressed the
+  problem. We gradually scaled up our job size to 4000 cores on Ranger but this put excessive stress on the
+  file system. Due to this issue, we decided to stay below 2000 cores. Another solution could be to have a
+  different copy of the input file for every group of 500 mlRho processes.
+\item The BigJob tool is and has been under active development. There were major design changes in process
+  during the time that we started using it on Ranger. BigJob addresses a range of compute and data problems
+  and multiple example scripts are available on its website. The initial version we deployed was not suitable for
+  our task, which is bundling and running hundreds of serial jobs.
+\item Another potential issue with BigJob is that the master process needs to be active from the time the job
+  is submitted until the end of the job. This means that BigJob needs to be active on the login node of the
+  system and cannot be disconnected. Another solution to this issue is to run BigJob in a screen session or use another
+  tool like nohup on the login node. In the end we were told not to run more than four interactive sessions at a time, which was less than
+  optimal for our use case.
+\item We also had problems with some mlRho processes not completing, which forced us to identify and re-run
+  these jobs. This was a major problem, but both mlRho and BigJob were in being heavily developed and new
+  versions were being released daily as we used them. This made it difficult to pinpoint the issue.
 
 \end{itemize}
 
@@ -937,10 +931,10 @@ input data access patterns (i.e. the input I/O) is very different for the CPUs a
 
 In all, the project of transitioning and scaling up mlRho workloads from campus computational resources
 to XSEDE resources has been very successful, not only from the perspective of accelerating scientific
-discovery, but also from the perspective of providing a very real and useful example of the value of a {\bf
-  CAMPUS BRIDGIST}. Through this project we have shown that a relatively small investment of effort by people
+discovery, but also from the perspective of providing a very real and useful example of the value of a campus
+bridging expert. Through this project we have shown that a relatively small investment of effort by people
 with the right mix of skills can make a big difference when transitioning from local
-resources to XSEDE resources. We propose that XSEDE consider including the {\bf CAMPUS BRIDGIST} role in more
+resources to XSEDE resources. We propose that XSEDE consider including the campus bridging expert role in more
 of its supported projects, particularly those projects with PIs who are relatively new to high performance
 computing concepts like batch scheduling, application scalability, and high performance file systems. As the
 mlRho software continues to be improved and applied to more data sets, we hope to continue the excellent
@@ -950,7 +944,10 @@ professionals.
 
 %ACKNOWLEDGMENTS are optional
 \section{Acknowledgments}
-
+We would like to thank C. Stewart for his insightful comments on the initial manuscript. This work was
+supported by XSEDE allocation TG-MCB120162. This research was also supported in part by the Pervasive
+Technology Institute Initiative. The Pervasive Technology Institute Initiative of Indiana University is funded
+by Lilly Endowment, Inc.
 %
 % The following two commands are all you need in the
 % initial runs of your .tex file to
