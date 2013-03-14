@@ -87,7 +87,7 @@
 
 
 \newif\ifdraft
-\drafttrue
+%\drafttrue
 \ifdraft
 \newcommand{\abhi}[1]{ {\textcolor{red} { ***Abhinav: #1 }}}
 \else
@@ -527,12 +527,12 @@ machines.
 
 \begin{table}
 \centering
-\begin{tabular}{|c|c| c |c  |     } \hline
-Organism Type		& Size of profile& \multicolumn{2}{|c|}{Distance/sec}  \\ \hline
-	&   & V 1.10 & V 2.1 \\ \hline
-{\it F. cylindrus (diatom)}  & 0.72 GB & 0.0034 & 0.323 \\ \hline
-{\it P. ornithorhynchus (platypus)}  & 11 GB &$2.3{\times}10{-4}$ & 0.020 \\ \hline
-{\it C. familiaris (dog)}  & 31 GB & $8.1{\times}10^{-5}$ & 0.005 \\
+\begin{tabular}{|p{3.3cm}|c| c |c  |     } \hline
+{\scriptsize Organism Type	}	& {\scriptsize Size of profile}& \multicolumn{2}{|c|}{{\scriptsize Distance/sec} } \\ \hline
+	& {\scriptsize (GB)}  & {\scriptsize V 1.10} & {\scriptsize V 2.1} \\ \hline
+{\scriptsize {\it F. cylindrus (diatom)} } & {\scriptsize 0.72  }& {\scriptsize 0.0034} & {\scriptsize 0.323} \\ \hline
+{\scriptsize {\it P. ornithorhynchus (platypus)} } & {\scriptsize 11 } &{\scriptsize $2.3{\times}10{-4}$ }&  {\scriptsize 0.020} \\ \hline
+{\scriptsize {\it C. familiaris (dog)} } & {\scriptsize 31} & {\scriptsize $8.1{\times}10^{-5}$} & {\scriptsize 0.005} \\
 \hline
 %Intel & 405 & 388 & 364 & 346\\
 %\hline
@@ -540,13 +540,14 @@ Organism Type		& Size of profile& \multicolumn{2}{|c|}{Distance/sec}  \\ \hline
 %\hline
 
 \end{tabular}
-\caption{The table lists three organisms which were chosen to represent profiles of different size. The second column shows the size of the profile in gigabytes. The third column shows the distance travelled per second by V1.10 and V2.1 on one core on Ranger and Stampede, respectively. The rate of distance is a function of the size of the genome. \abhi{need to fix width} } 
+\caption{The table lists three organisms which were chosen to represent profiles of different size. The second column shows the size of the profile in gigabytes. The third column shows the distance travelled per second by V1.10 and V2.1 on one core on Ranger and Stampede, respectively. The rate of distance is a function of the size of the genome.  } 
 \label{table:cache_comp}
 \end{table}
 
+
 \begin{figure*}[t] %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
-\includegraphics[width=0.78\textwidth]{figures/bj-scaling.png}
+\includegraphics[width=0.68\textwidth]{figures/bj-scaling.png}
 \caption{After running 16, 32, 64 and 128 instances of mlRho concurrently using BigJob on Ranger and Stampede with versions 1.10 and 2.1, respectively, we see that amount of work done increases nearly linearly with the number of instances of mlRho. The y-axis shows the total distance travelled by all the instances put together and normalized to 16 instances. The x-axis shows the number of concurrent mlRho processes running. }
 \label{fig:bj-scaling}
 \end{figure*}
@@ -620,9 +621,9 @@ our scalability. In the future, if I/O becomes an issue for scalability, we plan
 same data file to prevent an excessive number of concurrent processes from reading from the same file at the
 same time.
 
+
 \section{Optimization of mlRho}\label{sec:optimization}
-\abhi{talk about how the faster mlrho is awesome. for xsede+other users
-why everyone should attempt analysis}
+We can not stress enough how important it is for each and every user of a shared supercomputer to analyze and optimize their code. This is especially true in the case of users who develop their own code. Most community codes are analyzed and optimized by their developers. But still, it is not unusual to see a 10\% gain in performance just by moving from one compiler to the other. Given that XSEDE distributes hundreds of millions of SUs every year, even a 10 or 20 percent improvement will save millions of SUs and lower queue waiting times. 
 \subsection{Performance Analysis}\label{subsec:analysis}
 %\subsection{Source-code Development and Optimization}
 The mlRho application is being developed through a collaboration of research labs at IU and the
@@ -905,12 +906,6 @@ prompted us to begin new simulation and theoretical work to explain the observed
 theoretical prediction and our ML measurements on actual data. We believe that these new data will provide 
 insights into the evolution of a large number of organisms.
 
-\begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
-\centering
-\includegraphics[width=0.48\textwidth]{figures/mic-scaling.pdf}
-\caption{The graph compares the performance scaling behavior of mlRho on CPUs and Phis. Each mlRho process on a CPU was run on an individual core while multiple instances of mlRho were run on a single Phi. Four hundred and eighty-eight (488) mlRho instances on a single Phi gave us the same throughput as running 32 instances on two nodes of Stampede.  }
-\label{fig:mic-scaling}
-\end{figure}
 
 \subsection{Future Work}
 We have begun initial work on deploying the mlRho program on the Intel Xeon Phi coprocessor boards
@@ -918,7 +913,7 @@ available on Stampede. Since the Phi runs an embedded Linux Operating System \ci
 it is relatively easy to launch multiple copies of the mlRho binary on the Phi board, assuming
 that the input data set can fit in the memory footprint of the Phi board. In our case we copied input data
 sets to the Phi RAM disk and computed against this copy. Figure \ref{fig:mic-scaling} compares the performance
-of a single Phi board on the {\it F. cylindrus} genome with the scaling measurements presented in Figure
+of a single Phi board on the {\it F. cylindrus (diatom)} genome with the scaling measurements presented in Figure
 \ref{fig:stampede-bench}. Here we compare to the scaling numbers for the Stampede timings using version 2.1 of
 the mlRho software. By using a relatively large number of processes, in this case 488, on the Phi board
 we have been able to achieve throughput that is roughly equal to the throughput of the CPUs on two Stampede
@@ -926,7 +921,13 @@ nodes. We are currently focusing our efforts on integrating the Phi scripts into
 adding the Phi workload to the CPU workload. Writing a script for the BigJob framework is fairly
 straightforward, the challenge comes in properly balancing the load between CPU and Phi, particularly when the
 input data access patterns (i.e. the input I/O) is very different for the CPUs and the Phi board.
-
+\begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
+\centering
+\includegraphics[width=0.48\textwidth]{figures/mic-scaling.pdf}
+\caption{The graph compares the performance scaling behavior of mlRho on CPUs and Phis. Each mlRho process on a CPU was run on an individual core while multiple instances of mlRho were run on a single Phi. Four hundred and eighty-eight (488) mlRho instances on a single Phi gave us the same throughput as running 32 instances on two nodes of Stampede.  }
+\label{fig:mic-scaling}
+\end{figure}
+\\
 \section{Conclusions}\label{sec:conclusion}
 
 In all, the project of transitioning and scaling up mlRho workloads from campus computational resources
@@ -943,8 +944,10 @@ professionals.
 
 
 %ACKNOWLEDGMENTS are optional
+%acknowledgements -- xsede alloc, tacc people, saga team etc. 
+%figure placement
 \section{Acknowledgments}
-We would like to thank C. Stewart for his insightful comments on the initial manuscript. This work was
+We would like to thank C. Stewart for his insightful comments on the initial manuscript. We would also like to thank Yaakoub El Khamra at TACC and the SAGA-BigJob team at Rutgers University for their help with technical issues. This work was
 supported by XSEDE allocation TG-MCB120162. This research was also supported in part by the Pervasive
 Technology Institute Initiative. The Pervasive Technology Institute Initiative of Indiana University is funded
 by Lilly Endowment, Inc.
