@@ -923,7 +923,7 @@ straightforward, the challenge comes in properly balancing the load between CPU 
 input data access patterns (i.e. the input I/O) is very different for the CPUs and the Phi board.
 \begin{figure} %[h!] % t=top, b=bottom, h=here, p=separate page
 \centering
-\includegraphics[width=0.48\textwidth]{figures/mic-scaling.pdf}
+\includegraphics[width=0.42\textwidth]{figures/mic-scaling.pdf}
 \caption{The graph compares the performance scaling behavior of mlRho on CPUs and Phis. Each mlRho process on a CPU was run on an individual core while multiple instances of mlRho were run on a single Phi. Four hundred and eighty-eight (488) mlRho instances on a single Phi gave us the same throughput as running 32 instances on two nodes of Stampede.  }
 \label{fig:mic-scaling}
 \end{figure}
