@@ -242,7 +242,7 @@ program, the Extended Collaborative Support Service (ECSS) \cite{ecss_web} progr
 
 \terms{PERFORMANCE, EXPERIMENTATION}
 
-\keywords{high-throughput, XSEDE, BigJob, pilot-job, genetics, mlRho, performance tuning}
+\keywords{high-throughput, XSEDE, BigJob, pilot-job, genetics, mlRho, performance tuning, optimization}
 
 \section{Introduction}
 As first defined by the National Science Foundation Advisory Committee for Cyberinfrastructure's Task Force on Campus Bridging \cite{nsf2011}, and later expanded upon by \citeauthor{stewart2012}, campus bridging is:
@@ -923,8 +923,7 @@ input data access patterns (i.e. the input I/O) is very different for the CPUs a
 \caption{The graph compares the performance scaling behavior of mlRho on CPUs and Phis. Each mlRho process on a CPU was run on an individual core while multiple instances of mlRho were run on a single Phi. Four hundred and eighty-eight (488) mlRho instances on a single Phi gave us the same throughput as running 32 instances on two nodes of Stampede.  }
 \label{fig:mic-scaling}
 \end{figure}
-\\
-\\
+
 \section{Conclusions}\label{sec:conclusion}
 
 In all, the project of transitioning and scaling up mlRho workloads from campus computational resources
