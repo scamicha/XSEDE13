@@ -215,7 +215,7 @@ Robert Henschel\\
   An increasing number of biologists' computational demands have outgrown the capacity of desktop
 workstations and they are turning to supercomputers to run their simulations and calculations. Many of today's computational problems, however, require larger resource commitments than even individual universities can
  provide. XSEDE is one of the first places researchers turn to when they outgrow their campus
-resources. XSEDE machines are far larger (by at least an order of magnitude) than what most universities offer. Transitioning from a campus resource to an XSEDE resource is seldom a trivial task but XSEDE has
+resources. XSEDE machines are far larger (by at least an order of magnitude) than what most universities offer. Transitioning from a campus resource to an XSEDE resource is seldom a trivial task. XSEDE has
   taken many steps to make this easier, including the Campus Bridging initiative, the Campus Champions
 program, the Extended Collaborative Support Service (ECSS) \cite{ecss_web} program, and through education and outreach.
 
@@ -232,7 +232,7 @@ program, the Extended Collaborative Support Service (ECSS) \cite{ecss_web} progr
   with (ii) and (iii). But (i), (ii) and (iii) are often not part of a Campus Champion's regular job
   description. To someone writing an XSEDE proposal for the first time, a link to the guidelines and a few
   pointers may not always be enough for a successful application. In this paper we describe a new role for a
-  campus bridging expert to play in bridging the gaps between existing programs and present mlRho as an ideal case study.
+  campus bridging expert to play in closing the gaps between existing programs and present mlRho as a case study.
 \end{abstract}
 
 % A category with the (minimum) three required fields
@@ -269,9 +269,9 @@ This challenge is distinct from the challenge of providing a canonical software 
 by widely divergent software environments between campus and XSEDE resources. Even when the operating
 environment is not very different on XSEDE resources, compared to campus resources, researchers can face
 challenges with the sheer scale and complexity of XSEDE resources. In the situation described in this paper,
-campus bridging included to helping the researchers redesign their experiments and scale up their workflows to
+campus bridging included helping the researchers redesign their experiments and scale up their workflows to
 move effectively from their local workstations to IU's modest sized cluster environment, and then on to using
-the much larger XSEDE machines at TACC. It should be noted that, in general, the differences in software
+the much larger XSEDE machines at Texas Advanced Computing Center (TACC). It should be noted that, in general, the differences in software
 environment between the IU campus resources and the TACC supercomputers were superficial; the real challenges
 lie in scaling up the applications and navigating the complexity of a much larger system.
 
@@ -281,9 +281,9 @@ to bridge the gap between domain science and computer science and helps research
    move their applications from small-scale campus resources to much larger XSEDE resources. A campus
 bridging expert is mostly a technologist, who is able to apply many different approaches to scaling up
 applications, but should also be familiar with the common challenges of the scientific domain. The campus bridging expert must be able to
-communicate effectively about XSEDE resources with researchers who may have little or no HPC experience. The
+communicate effectively about XSEDE resources with researchers who may have little or no supercomputing experience. The
 campus bridging expert role is distinct from the current Campus Champion and the role filled by the Extended
-Collaborative Support Service (ECSS) team. As the name implies, the campus bridging expert bridges the gap
+Collaborative Support Service (ECSS) team. As the name implies, the campus bridging expert closes the gap
 between the Campus Champion role -- which is designed to provide information, guidance, and facilitate access
 to XSEDE resources, and the ECSS role, which is designed to provide in-depth analysis, insight and development
 for a particular scientific or engineering challenge. The role of campus bridging expert may, in fact, be
@@ -294,16 +294,15 @@ sized resources and help researchers in the field of population genomics use som
 resources to conduct a research program at an unprecedented magnitude.
 
 Researchers in the Indiana University (IU) Department of Biology have been conducting studies into population
-genomics and evolution for some time. A newly developed software program called mlRho \cite{MEC:MEC4482} is
+genomics and evolution for some time. A newly developed computer program called mlRho \cite{MEC:MEC4482} is
 being used to study ecological and genetic parameters in different populations. While mlRho is a serial code,
 the investigation we have conducted with our XSEDE allocation was embarrassingly parallel in nature. The work
 for each species was divided among many computational processes. To manage hundreds of processes for each of
 the 40+ species of interest, we used the SAGA BigJob pilot-job tool \cite{bigjob_web}, which is
 currently available on many XSEDE resources. BigJob allowed us to distribute the analyses for each species
-across thousands of processor cores, depending on the genome sizes of species. Thus far we have
-conducted maximum likelihood (ML) recombination rate studies on a total of 46 individual genomes. In addition
-to the use of the BigJob tool, we have done an extensive performance analysis of the mlRho code and, with biologists
-and computer scientists working in conjunction, have been able to improve the runtime of the code by a
+across thousands of processor cores, depending on the genome sizes. Thus far we have
+investigated a total of 46 individual genomes. In addition
+to the use of the BigJob tool, we have done an extensive performance analysis of the mlRho code and have been able to improve the runtime of the code by a
 factor of more than 50.
 
 The remainder of the paper is organized as follows: section \ref{sec:background} gives some insight into the
@@ -316,9 +315,9 @@ program and initial scientific results and in section \ref{sec:conclusion} we pr
 
 
 \section{Scientific Background}\label{sec:background}
-The amazing biodiversity on our planet has fascinated humans for thousands of years. To understand how this diversity arises and is maintained, it is critical to determine fundamental ecological and genetic parameters (e.g., population sizes, recombination rates) for a range of species. These parameters play important roles in creating opportunities for increasing genetic diversity, population divergence, and speciation. mlRho is a software package which uses next-generation genomic sequencing to generate a novel measure of linkage disequilibrium. Deploying mlRho on XSEDE resources has allowed us to study these important population-genetic parameters in a broad assembly of eukaryotic species. This approach has been particularly fruitful when applied to the newly available genome sequences now being produced by next-generation sequencing methods. 
+The amazing biodiversity on our planet has fascinated humans for thousands of years. To understand how this diversity arises and is maintained, it is critical to determine fundamental ecological and genetic parameters (e.g., population sizes, recombination rates) for a range of species. These parameters play important roles in creating opportunities for increasing genetic diversity, population divergence, and speciation. mlRho is a software package which uses next-generation genomic sequencing to generate a novel measure of linkage disequilibrium. Deploying mlRho on XSEDE resources has allowed us to study these important population-genetic parameters in a broad assembly of eukaryotic genomes.
 
-Although there are several methods for determining recombination rates, they can be both time and resource intensive. The mlRho software employs a novel analytic approach that uses a new metric called the zygosity correlation coefficient, which is estimated using maximum likelihood (ML) methods. This approach only requires single individual genome sequences, but is extremely data intensive. With the ML approach implemented in the mlRho software and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of species with accuracy that was previously unachievable. 
+Although there are several methods for determining recombination rates, they can be both time and resource intensive. The mlRho software employs a novel analytic approach that uses a new metric called the zygosity correlation coefficient, which is estimated using maximum likelihood (ML) methods. It only requires single individual genome sequences, but is extremely data intensive. Using mlRho and XSEDE computational resources, we have been able to examine the recombination rates of a plethora of species with accuracy that was previously unachievable. 
 
 %Understanding how the amazing biodiversity on our planet has arisen is a biological question that has
 %fascinated humans for thousands of years. It is critical to investigate the fundamental ecological and genetic
@@ -341,7 +340,7 @@ Although there are several methods for determining recombination rates, they can
 \subsection{Program Description}
 The mlRho software is a serial program that estimates mutation, recombination, and sequencing error rates from
 genome sequences~\cite{MEC:MEC4482}. The underlying data consists of assembled sequencing reads obtained from
-a single diploid individual. Such data are collected, for example, for the 1000 human genome project. mlRho reads a profile consisting of the number of nucleotides \texttt{A}s, \texttt{C}s, \texttt{G}s, and \texttt{T}s from a file at each sequenced position.
+a single diploid individual. Such data are collected, for example, for the 1000 human genome project. mlRho reads a profile consisting of the number of each nucleotide (\texttt{A}, \texttt{C}, \texttt{G}, and \texttt{T}) from a file at each sequenced position.
    Given a mutation and error rate, mlRho computes two probabilities for each profile: The
 probabilities of observing the profile given that the position is either mutated (heterozygous), or not
 (homozygous). These probabilities depend on the mutation and error rates. By varying them, mlRho finds the
@@ -358,9 +357,9 @@ Linkage disequilibrium (LD), i.e., the non-random association of alleles at two 
 parameter for many areas of population genetics.  In recent years, there has been growing interest in
 measuring LD across a broad range of species, because a proper understanding of LD would greatly facilitate
 identifying the genetic loci which underlie important phenotypic variation in natural populations, as well as
-human diseases. More importantly, LD is a population-genetic parameter that can help ascertain recombination
+human diseases. More importantly, LD is a population-genetic property that can help ascertain recombination
 rate, because recombination is the primary evolutionary force that breaks down LD among genetic loci. Although
-a substantial body of research has been devoted to determining the evolutionary consequences of
+a substantial body of research has been devoted to elucidating the evolutionary consequences of
 recombination~\cite{resolving-paradox}, the forces that determine recombination rates remain poorly
 understood. For example, we have little idea what determines the occurrence of recombination on a chromosome,
 what impact local DNA polymorphism has on recombination processes, and how recombination rates change over
@@ -369,8 +368,7 @@ evolutionary time~\cite{stumpf}.
 Conventional approaches to measuring LD and recombination rates use population-genetic surveys. These surveys
 require hundreds of individuals and dozens of genetic loci. Using this method, the sampling variance
 associated with conventional measures of LD, such as D (a measure of LD) and $r^2$ (the square of the
-correlation coefficient), is huge. Due to this fact, a large number of loci are needed to obtain a reasonable
-estimate of LD.  Recombination rates can also be investigated by pedigree analyses and crossing experiments,
+correlation coefficient), is huge. Recombination rates can also be investigated by pedigree analyses and crossing experiments,
 but these methods cannot provide information on fine-scale recombination rates and are often difficult to
 perform in model organisms, let alone non-model species. Thus, while we know these values for a few
 species, there is very little comparative data to understand how these processes vary across many species.
@@ -379,20 +377,19 @@ species, there is very little comparative data to understand how these processes
 Whole genome sequences of diploid organisms include both alleles at every site of the genome (two copies of
 each chromosome), which can be used to determine a number of very useful population-genetic parameters in the
 evolution a species \cite{LDS}. With the rapid accumulation of whole genome sequences from a large number of species, a
-maximum likelihood (ML) approach that capitalizes on these data has recently been developed by researchers at
-IU to estimate LD and examine genomic recombination patterns \cite{Lynch01112008,MEC:MEC4482}.
+maximum likelihood (ML) approach that capitalizes on these data has recently been developed 
+to estimate LD and examine genomic recombination patterns \cite{Lynch01112008,MEC:MEC4482}.
 
 The general idea behind this approach is that two allelic chromosomes had a common ancestor some time in the
-past and at that time, were
-identical. Since that time, they have become 
+past. Since that time, they have become 
 increasingly different, due to mutations changing their sequence. In 
-addition, recombination shuffles the mutations between chromosomes. If we catalog the similarities and
+addition, recombination shuffled the mutations between chromosomes. If we catalog the
 differences between the two alleles, we can learn about this history of mutation and recombination.
 
 The ML approach uses this information to determine the zygosity correlation ($\Delta$) between all the pairs
 of sites that are separated by various distances (i.e., the probability of two sites being both homozygous or
-both heterozygous) in a single diploid genome, using the entire set of assembled individual reads. Population genetic
-theory then links the expected value of $\Delta$ to conventional measures of LD, such as $\rho$, suggesting
+both heterozygous, or mixed) in a single diploid genome, using the entire set of assembled individual reads. Population genetic
+theory then links the expected value of $\Delta$ to conventional measures of LD, such as the population recombination rate $\rho$, suggesting
 that $\Delta$ can be used as a valid measure of LD on the population level.
 
 % {\center \bf Insert equation 11, 14, and 5d from Lynch unpublished.}
@@ -429,25 +426,26 @@ that $\Delta$ can be used as a valid measure of LD on the population level.
 
 % Thus, when rho is zero, $\Delta$ is approximated by $\theta$; when $\rho$ is infinite, $\Delta$ is approximated by u/r, a parameter that reflects the relative power of mutation versus recombination. These two parameters are critical for evaluating the mutational-hazard hypothesis for genome evolution (Lynch 2007)
 Our simulation results have shown that this ML procedure generates unbiased estimates for theta and
-zygosity-correlation at a range of sequencing coverage (10-20x) \cite{Lynch01112008}.  This ML technique has
-been fully implemented in the software package mlRho. The mlRho software is a highly
-versatile program, able to handle genomes of various sizes, and linkage analyses over hundreds of thousands of
-base pairs. The maximum-likelihood estimates for $\Delta$ and recombination rates are efficiently sought using
+zygosity-correlation at a range of sequencing coverage (10-20x) \cite{Lynch01112008}. mlRho is able to handle genomes of all sizes, and linkage analyses over hundreds of thousands of
+base pairs. It 
+computes the maximum-likelihood estimators of the population mutation 
+rate, $\theta$, the sequencing error rate, $\epsilon$, and the population 
+recombination rate, $\rho$ using
 the Nelder and Mead algorithm, as implemented by the GNU scientific library. Nonetheless, this analysis is
-computationally extremely intensive: millions to tens of billions of pairs of sites at a given distance have
-to be extracted from the input files (usually of giga-byte sizes) and maximum likelihood estimates of $\Delta$
-have to be calculated for every distance.
+computationally intensive: millions to tens of billions of pairs of sites at a given distance have
+to be extracted from the input files of up to 
+giga-byte sizes and $\Delta$ calculated for every distance ranging from 
+$10^2$ to $10^4$.
 
 
 \section{Transitioning to XSEDE}\label{sec:resources}
 We began with an initial research plan that called for 15 million core hours to completely
-analyze all of our target genomes without sacrificing any of the objectives. At this point, we were using
+analyze all target genomes. At this point, we were using
 Quarry, a local IU resource, but it was clear that we needed a bigger machine to complete the calculations in
 a reasonable period of time. Quarry is a 2960 core machine, whereas XSEDE machines such as Ranger, Stampede,
-and Kraken are much larger. Figure \ref{fig:scaling} shows the number of nodes and cores on each machine. The
+and Kraken have $10^5$ cores (Figure \ref{fig:scaling}). The
 software and scheduling environment on Quarry is similar to that of XSEDE machines referred to here. The
-central difference is in the size of the machines and therefore the biggest challenge was scaling up our workflow
-accordingly. 
+central difference is in the size of the machines and we explain howwe made the transition.
 %\begin{table}
 %\centering
 %\begin{tabular}{| l  | l  | l  | l  | l  | l  | l  |} \hline
@@ -475,13 +473,12 @@ accordingly.
 
 As a first step, we applied for a startup allocation on Ranger and Kraken to
 benchmark the mlRho application. We also planned to use the startup allocation to conduct a scaling study. A service
-unit in XSEDE is defined as one core hour on a machine. It became apparent to us that conducting the study for
-the full target list of 70+ genomes would require at least 15 million SUs. However, given that the researchers
+unit in XSEDE is defined as one core hour on a machine. It became apparent that conducting the study for
+all 70+ genomes would require at least 15 million SUs. However, given that the researchers
 are new to the XSEDE ecology and this is the first time they are applying for a large scale allocation, we
 wanted to stay under the 5 million SU mark. To do this, we pared down the list to 46 diploid eukaryotic
-genomes, covering a broad range of genome sizes. We initially determined to measure 100 kilo basepair (kbp)
-distances to limit the number of SUs required. The 100 kbp cutoff value is chosen because theory suggests that
-a good measure of LD in a genome should span at least 50$-$100 kbp. Given that in eukaryotes, recombination
+genomes. We initially determined to measure 100 kilo basepair (kbp)
+distances to limit the number of SUs required. Given that in eukaryotes, recombination
 rates range between 0.001$-$1 event per Mbp~\cite{annurev-genom-082410-101412}, a 100 kbp window across a
 genome provides a good basis for capturing the signature of crossover events that occur 1 or 2 times per
 chromosome arm per meiotic event.
@@ -511,7 +508,7 @@ problem by providing users with wrappers and other software which bundle many se
 
 We used the SAGA BigJob to bundle our serial mlRho simulations. We have integrated mlRho with
 BigJob and conducted several experiments on Ranger and Stampede which have shown good performance and
-scalability.  BigJob is pilot-job tool available on many XSEDE resources such as Kraken, Ranger, and
+scalability.  BigJob is a pilot-job tool available on many XSEDE resources such as Kraken, Ranger, and
 Lonestar. Many researchers have successfully used BigJob~\cite{saga_bigjob_condor_cloud} to bundle hundreds of smaller jobs into larger, more manageable groups of jobs~\cite{Luckow:2008fp, async_repex11}.
 
 BigJob maintains the list of processors allocated after the job request becomes active. The
@@ -589,7 +586,7 @@ help. In the case of the mlRho project, research staff from the Indiana Universi
 Institute (PTI) helped biologists to prepare an allocation proposal. We started by requesting startup
 allocations on Ranger and Kraken. We benchmarked mlRho on a single core on Ranger and Kraken. We then did a
 scalability study as described in section \ref{sec:scalability}. It is important to accurately estimate and
-justify the total number of SUs that we request from XSEDE.  We also need to justify the science, but if the
+justify the total number of SUs that we request from XSEDE.  We usually also need to justify the science, but if the
 research is supported by a current grant award from a federal science agency, further justification is not
 needed. Given that we are requesting shared resources, it is important that we make an effort to analyze and
 optimize our code. This reduces our own usage time and also turnaround time. We began to look into code
@@ -624,8 +621,9 @@ We can not stress enough how important it is for each and every user of a shared
 
 \subsection{Performance Analysis}\label{subsec:analysis}
 %\subsection{Source-code Development and Optimization}
-The mlRho application is being developed through a collaboration of research labs at IU and the
-Max Planck Institute for Evolutionary Biology (MPI) in Germany. Following initial benchmarking and scalability
+Following its initial release in 2010\ref{mlrho}, mlRho is being developed through a collaboration
+ of research labs at IU and the Max Planck Institute for Evolutionary Biology (MPI) in Germany.
+ Following initial benchmarking and scalability
 testing for an XSEDE allocation proposal, staff members from the IU Pervasive Technology Institute worked
 together with the mlRho application developer at MPI to improve the serial performance of the code. As a result of the investigations by PTI and MPI,  a new version which is vastly more efficient and delivers much better performance when compared to
 the original version has been released. While the work described in the previous sections could be addressed by the campus
@@ -702,7 +700,7 @@ The mlRho program can then read the profiles from the files produced by formatPr
 % setNumProfiles(numProfiles);
 % \end{lstlisting}
 The profiles are read individually rather than in a single
-step, because we found that this helped with stability on the Lustre filesystem.
+step, because we found that this improved stability on the Lustre filesystem.
  The improvement in data handling introduced with these changes resulted in an overall speedup of the
 serial code by a factor of 2-4X. The next focus was to look at the repeated computation that occurred in the
 mlRho program. 
@@ -835,7 +833,7 @@ The other factor in simplifying  the transition was the use of the BigJob framew
 consultation advice from the PTI staff. The initial transition to running mlRho in a massively parallel
 way on Ranger was fairly straightforward (mainly due to the embarrassingly parallel nature of the problem),
 and produced excellent throughput. Using BigJob to run thousands of mlRho processes was not without
-issues, though. Without the aid of the PTI staff to assist in debugging and troubleshooting these issues,
+issues, though. Without the aid of the PTI staff,
 working effectively on Ranger and Stampede would have been extremely challenging. 
 %\abhi{rewrite some of Sen's problems in the following paragraph with the actual issues and how  we resolved them}.
 \subsubsection{Technical Issues }
@@ -926,7 +924,7 @@ input data access patterns (i.e. the input I/O) is very different for the CPUs a
 
 In all, the project of transitioning and scaling up mlRho workloads from campus computational resources
 to XSEDE resources has been very successful, not only from the perspective of accelerating scientific
-discovery, but also from the perspective of providing a very real and useful example of the value of a campus
+discovery, but also from the perspective of providing a real and useful example of the value of a campus
 bridging expert. Through this project we have shown that a relatively small investment of effort by people
 with the right mix of skills can make a big difference when transitioning from local
 resources to XSEDE resources. We propose that XSEDE consider including the campus bridging expert role in more
