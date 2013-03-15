@@ -445,7 +445,8 @@ Quarry, a local IU resource, but it was clear that we needed a bigger machine to
 a reasonable period of time. Quarry is a 2960 core machine, whereas XSEDE machines such as Ranger, Stampede,
 and Kraken have $10^5$ cores (Figure \ref{fig:scaling}). The
 software and scheduling environment on Quarry is similar to that of XSEDE machines referred to here. The
-central difference is in the size of the machines and we explain howwe made the transition.
+central difference is in the size of the machines and we explain how
+we made the transition.
 %\begin{table}
 %\centering
 %\begin{tabular}{| l  | l  | l  | l  | l  | l  | l  |} \hline
@@ -516,7 +517,8 @@ user can design the BigJob to assign these processors to start and manage smalle
 thousands of single core job requests to the queue, we can submit hundreds of large job requests ($\approx$
 500 to 5000 cores) to the queue. This reduces the overall number of job submissions to the queue and thereby,
 to some extent, time spent waiting in the queue. This job size is also more appropriate for many of the XSEDE
-machines.
+machines.\\
+\\
 
 
 
@@ -621,7 +623,7 @@ We can not stress enough how important it is for each and every user of a shared
 
 \subsection{Performance Analysis}\label{subsec:analysis}
 %\subsection{Source-code Development and Optimization}
-Following its initial release in 2010\ref{mlrho}, mlRho is being developed through a collaboration
+Following its initial release in 2010\cite{MEC:MEC4482}, mlRho is being developed through a collaboration
  of research labs at IU and the Max Planck Institute for Evolutionary Biology (MPI) in Germany.
  Following initial benchmarking and scalability
 testing for an XSEDE allocation proposal, staff members from the IU Pervasive Technology Institute worked
@@ -919,6 +921,7 @@ input data access patterns (i.e. the input I/O) is very different for the CPUs a
 \caption{The graph compares the performance scaling behavior of mlRho on CPUs and Phis. Each mlRho process on a CPU was run on an individual core while multiple instances of mlRho were run on a single Phi. Four hundred and eighty-eight (488) mlRho instances on a single Phi gave us the same throughput as running 32 instances on two nodes of Stampede.  }
 \label{fig:mic-scaling}
 \end{figure}
+\\
 \\
 \section{Conclusions}\label{sec:conclusion}
 
