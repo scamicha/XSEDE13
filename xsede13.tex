@@ -842,14 +842,15 @@ working effectively on Ranger and Stampede would have been extremely challenging
 %\abhi{rewrite some of Sen's problems in the following paragraph with the actual issues and how  we resolved them}.
 \subsubsection{Technical Issues }
 
-The initial benchmarking and scaling tests that we did for the allocation proposal progressed smoothly. But as with any research project, we ran into many technical challenges when we started running experiments at scale on Ranger. There were scaling issues, problems with BigJob design/usage, and file system issues, and some of these led to the user getting banned from the system. Some of the major issues:
+The initial benchmarking and scaling tests that we did for the allocation proposal progressed smoothly. But as with any research project, we ran into many technical challenges when we started running experiments at scale on Ranger. There were scaling issues, problems with BigJob design/usage, and file system issues. Some of the major issues:
 \begin{itemize}
 \item We had to remain vigilant for issues related to the Lustre file system, given that hundreds of mlRho
   processes read from a single input file. We tried to address this problem by striping the directories
-  containing the input files. TACC administrators advised us that striping the input files addressed the
-  problem. We gradually scaled up our job size to 4000 cores on Ranger but this put excessive stress on the
+  containing the input files. We gradually scaled up our job size to 4000 cores on Ranger but this put excessive stress on the
   file system. Due to this issue, we decided to stay below 2000 cores. Another solution could be to have a
-  different copy of the input file for every group of 500 mlRho processes.
+  different copy of the input file for every group of 500 mlRho processes. During the course of attempting to
+  resolve these issues, Ranger was decommissioned and Stampede came online. We did not see a similar issue on
+  the Stampede file system, which is likely due to the improved hardware of the Stampede file system.
 \item The BigJob tool is and has been under active development. There were major design changes in process
   during the time that we started using it on Ranger. BigJob addresses a range of compute and data problems
   and multiple example scripts are available on its website. The initial version we deployed was not suitable for
@@ -933,7 +934,10 @@ bridging expert. Through this project we have shown that a relatively small inve
 with the right mix of skills can make a big difference when transitioning from local
 resources to XSEDE resources. We propose that XSEDE consider including the campus bridging expert role in more
 of its supported projects, particularly those projects with PIs who are relatively new to high performance
-computing concepts like batch scheduling, application scalability, and high performance file systems. As the
+computing concepts like batch scheduling, application scalability, and high performance file systems. This
+effort could be funded at the XSEDE level by providing experts at each of the XSEDE centers
+to assist with campus bridging, or at the level of the individual university where staff could be funded to
+assist local researchers in making the transition from campus resources to XSEDE. As the
 mlRho software continues to be improved and applied to more data sets, we hope to continue the excellent
 synergistic relationship between domain scientists, computer scientists, and cyberinfrastructure
 professionals.
